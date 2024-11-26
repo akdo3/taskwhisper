@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Task, Project } from '../types/todo';
+import { Task, Project, SubTask } from '../types/todo';
 import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -7,13 +7,17 @@ interface TodoStore {
   tasks: Task[];
   projects: Project[];
   selectedProjectId: string | null;
-  addTask: (task: Omit<Task, 'id'>) => void;
+  addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
   addProject: (project: Omit<Project, 'id'>) => void;
   selectProject: (projectId: string | null) => void;
   updateTaskRecurrence: (taskId: string, recurrence?: { type: 'daily' | 'weekly' | 'monthly' | 'yearly'; interval: number }) => void;
   setReminder: (taskId: string, reminderDate?: Date) => void;
+  addSubtask: (taskId: string, title: string) => void;
+  toggleSubtask: (taskId: string, subtaskId: string) => void;
+  deleteSubtask: (taskId: string, subtaskId: string) => void;
+  updateTask: (taskId: string, updates: Partial<Omit<Task, 'id' | 'subtasks'>>) => void;
 }
 
 const createNextDueDate = (currentDate: Date, recurrence: NonNullable<Task['recurrence']>) => {
@@ -38,7 +42,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
   selectedProjectId: null,
   addTask: (task) =>
     set((state) => ({
-      tasks: [...state.tasks, { ...task, id: Math.random().toString() }],
+      tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [] }],
     })),
   toggleTask: (taskId) =>
     set((state) => {
@@ -67,6 +71,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
           completed: false,
           dueDate: nextDueDate,
           reminder: task.reminder ? createNextDueDate(task.reminder, task.recurrence) : undefined,
+          subtasks: task.subtasks.map(st => ({ ...st, completed: false })),
         });
       }
 
@@ -92,6 +97,50 @@ export const useTodoStore = create<TodoStore>((set) => ({
     set((state) => ({
       tasks: state.tasks.map((task) =>
         task.id === taskId ? { ...task, reminder: reminderDate } : task
+      ),
+    })),
+  addSubtask: (taskId, title) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              subtasks: [
+                ...task.subtasks,
+                { id: Math.random().toString(), title, completed: false },
+              ],
+            }
+          : task
+      ),
+    })),
+  toggleSubtask: (taskId, subtaskId) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              subtasks: task.subtasks.map((st) =>
+                st.id === subtaskId ? { ...st, completed: !st.completed } : st
+              ),
+            }
+          : task
+      ),
+    })),
+  deleteSubtask: (taskId, subtaskId) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              subtasks: task.subtasks.filter((st) => st.id !== subtaskId),
+            }
+          : task
+      ),
+    })),
+  updateTask: (taskId, updates) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === taskId ? { ...task, ...updates } : task
       ),
     })),
 }));

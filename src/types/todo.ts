@@ -1,3 +1,9 @@
+export interface SubTask {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -11,6 +17,7 @@ export interface Task {
     interval: number;
   };
   reminder?: Date;
+  subtasks: SubTask[];
 }
 
 export interface Project {

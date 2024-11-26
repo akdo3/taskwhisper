@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Calendar, Bell, Repeat } from 'lucide-react';
+import { Plus, Calendar, Bell, Repeat, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,8 +23,20 @@ export const TaskForm = () => {
   const [recurrenceType, setRecurrenceType] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>();
   const [recurrenceInterval, setRecurrenceInterval] = useState(1);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium');
+  const [newSubtask, setNewSubtask] = useState('');
+  const [subtasks, setSubtasks] = useState<{ title: string }[]>([]);
 
   const { addTask, selectedProjectId, projects } = useTodoStore();
+
+  const handleAddSubtask = () => {
+    if (!newSubtask.trim()) return;
+    setSubtasks([...subtasks, { title: newSubtask }]);
+    setNewSubtask('');
+  };
+
+  const removeSubtask = (index: number) => {
+    setSubtasks(subtasks.filter((_, i) => i !== index));
+  };
 
   const handleAddTask = () => {
     if (!newTask.trim()) return;
@@ -52,6 +64,7 @@ export const TaskForm = () => {
     setRecurrenceType(undefined);
     setRecurrenceInterval(1);
     setPriority('medium');
+    setSubtasks([]);
   };
 
   return (
@@ -68,12 +81,14 @@ export const TaskForm = () => {
           Add Task
         </Button>
       </div>
+      
       <Textarea
         placeholder="Description (optional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         className="mb-4"
       />
+      
       <div className="flex gap-4 mb-4">
         <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
           <SelectTrigger className="w-[180px]">
@@ -122,7 +137,7 @@ export const TaskForm = () => {
         </Popover>
       </div>
       
-      <div className="flex gap-4">
+      <div className="flex gap-4 mb-4">
         <Select
           value={recurrenceType}
           onValueChange={(value: any) => setRecurrenceType(value)}
@@ -148,6 +163,39 @@ export const TaskForm = () => {
             className="w-24"
             placeholder="Interval"
           />
+        )}
+      </div>
+
+      <div className="border-t pt-4 mt-4">
+        <h3 className="text-sm font-medium mb-2">Subtasks</h3>
+        <div className="flex gap-2 mb-2">
+          <Input
+            placeholder="Add a subtask..."
+            value={newSubtask}
+            onChange={(e) => setNewSubtask(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleAddSubtask()}
+            className="flex-1"
+          />
+          <Button onClick={handleAddSubtask} variant="outline">
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+        {subtasks.length > 0 && (
+          <ul className="space-y-2">
+            {subtasks.map((subtask, index) => (
+              <li key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded">
+                <span className="flex-1">{subtask.title}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeSubtask(index)}
+                  className="h-6 w-6 p-0"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
