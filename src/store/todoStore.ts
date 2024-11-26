@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Task, Project, SubTask } from '../types/todo';
+import { Task, Project, SubTask, Attachment } from '../types/todo';
 import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -7,7 +7,7 @@ interface TodoStore {
   tasks: Task[];
   projects: Project[];
   selectedProjectId: string | null;
-  addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;
+  addTask: (task: Omit<Task, 'id' | 'subtasks' | 'attachments'>) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
   addProject: (project: Omit<Project, 'id'>) => void;
@@ -17,7 +17,7 @@ interface TodoStore {
   addSubtask: (taskId: string, title: string) => void;
   toggleSubtask: (taskId: string, subtaskId: string) => void;
   deleteSubtask: (taskId: string, subtaskId: string) => void;
-  updateTask: (taskId: string, updates: Partial<Omit<Task, 'id' | 'subtasks'>>) => void;
+  updateTask: (taskId: string, updates: Partial<Omit<Task, 'id' | 'subtasks' | 'attachments'>>) => void;
 }
 
 const createNextDueDate = (currentDate: Date, recurrence: NonNullable<Task['recurrence']>) => {
@@ -42,7 +42,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
   selectedProjectId: null,
   addTask: (task) =>
     set((state) => ({
-      tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [] }],
+      tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [], attachments: [] }],
     })),
   toggleTask: (taskId) =>
     set((state) => {

@@ -4,6 +4,13 @@ export interface SubTask {
   completed: boolean;
 }
 
+export interface Attachment {
+  id: string;
+  type: 'image' | 'document' | 'url';
+  url: string;
+  title: string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -18,6 +25,8 @@ export interface Task {
   };
   reminder?: Date;
   subtasks: SubTask[];
+  notes?: string;
+  attachments: Attachment[];
 }
 
 export interface Project {
