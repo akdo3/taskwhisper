@@ -1,4 +1,4 @@
-import { Calendar, CheckCircle2, Circle, Trash2, Bell, Repeat, ChevronDown, ChevronRight } from 'lucide-react';
+import { Calendar, CheckCircle2, Circle, Trash2, Bell, Repeat, ChevronDown, ChevronRight, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { useTodoStore } from '../store/todoStore';
 import { cn } from '@/lib/utils';
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Task } from '../types/todo';
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
