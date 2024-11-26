@@ -49,16 +49,8 @@ export const useTodoStore = create<TodoStore>((set) => ({
         if (t.id === taskId) {
           const completed = !t.completed;
           
-          // If task is completed and has recurrence, create next occurrence
           if (completed && t.recurrence && t.dueDate) {
             const nextDueDate = createNextDueDate(t.dueDate, t.recurrence);
-            const newTask = {
-              ...t,
-              id: Math.random().toString(),
-              completed: false,
-              dueDate: nextDueDate,
-              reminder: t.reminder ? createNextDueDate(t.reminder, t.recurrence) : undefined,
-            };
             return { ...t, completed };
           }
           
@@ -67,7 +59,6 @@ export const useTodoStore = create<TodoStore>((set) => ({
         return t;
       });
 
-      // If we created a new recurring task, add it to the list
       if (task.completed === false && task.recurrence && task.dueDate) {
         const nextDueDate = createNextDueDate(task.dueDate, task.recurrence);
         updatedTasks.push({
@@ -114,7 +105,7 @@ if (typeof window !== 'undefined') {
     store.tasks.forEach(task => {
       if (task.reminder && !task.completed) {
         const reminderTime = new Date(task.reminder);
-        if (Math.abs(now.getTime() - reminderTime.getTime()) < 60000) { // Within the last minute
+        if (Math.abs(now.getTime() - reminderTime.getTime()) < 60000) {
           toast(`Reminder: ${task.title}`, {
             description: task.description,
           });

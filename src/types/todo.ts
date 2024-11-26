@@ -5,6 +5,7 @@ export interface Task {
   completed: boolean;
   dueDate?: Date;
   projectId: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
   recurrence?: {
     type: 'daily' | 'weekly' | 'monthly' | 'yearly';
     interval: number;
