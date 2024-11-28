@@ -11,58 +11,46 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Index = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-50 md:hidden p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex justify-between items-center max-w-3xl mx-auto">
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container flex h-14 items-center">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="touch-manipulation">
+                <Button variant="ghost" size="icon" className="md:hidden touch-target">
                   <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="p-0 w-[80%] sm:w-[350px]">
                 <Sidebar />
               </SheetContent>
             </Sheet>
-            <ThemeToggle />
+            <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+              <ThemeToggle />
+            </div>
           </div>
-        </div>
+        </header>
 
-        <div className="flex">
+        <div className="flex min-h-screen">
           {/* Desktop Sidebar */}
-          <div className="hidden md:block w-64 shrink-0 animate-slide-in">
+          <div className="hidden md:block w-64 shrink-0">
             <Sidebar />
           </div>
           
           {/* Main Content */}
-          <div className="flex-1 p-4 md:p-8 w-full animate-fade-in overflow-x-hidden">
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div className="hidden md:flex justify-end">
-                <ThemeToggle />
-              </div>
-              
-              {/* Responsive grid for stats on mobile */}
-              <div className="px-2 sm:px-0">
+          <main className="flex-1 mobile-container py-6">
+            <div className="mx-auto max-w-4xl space-y-8">
+              <div className="space-y-6">
                 <ProgressStats />
-              </div>
-              
-              {/* Smart suggestions with proper mobile spacing */}
-              <div className="px-2 sm:px-0">
                 <SmartSuggestions />
-              </div>
-              
-              {/* Task form and list with mobile-optimized spacing */}
-              <div className="space-y-4 px-2 sm:px-0">
                 <TaskForm />
                 <TaskList />
               </div>
             </div>
-          </div>
+          </main>
         </div>
       </div>
     </ThemeProvider>
