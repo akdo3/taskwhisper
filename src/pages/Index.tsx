@@ -1,6 +1,8 @@
 import { TaskForm } from '@/components/TaskForm';
 import { TaskList } from '@/components/TaskList';
 import { Sidebar } from '@/components/Sidebar';
+import { ProgressStats } from '@/components/ProgressStats';
+import { SmartSuggestions } from '@/components/SmartSuggestions';
 import { useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -42,6 +44,8 @@ const Index = () => {
               <div className="hidden md:flex justify-end mb-4">
                 <ThemeToggle />
               </div>
+              <ProgressStats />
+              <SmartSuggestions />
               <TaskForm />
               <TaskList />
             </div>
