@@ -27,14 +27,14 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 bg-white h-full min-h-screen border-r border-gray-200 p-4">
+    <div className="w-full h-full min-h-screen bg-background border-r border-border p-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold">Projects</h2>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsAddingProject(true)}
-          className="h-8 w-8"
+          className="h-8 w-8 touch-manipulation"
         >
           <Plus className="h-4 w-4" />
         </Button>
@@ -47,11 +47,12 @@ export const Sidebar = () => {
             value={newProjectName}
             onChange={(e) => setNewProjectName(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddProject()}
+            className="w-full"
           />
           <div className="flex gap-2">
             <Button
               size="sm"
-              className="w-full"
+              className="w-full touch-manipulation"
               onClick={handleAddProject}
             >
               Add
@@ -59,7 +60,7 @@ export const Sidebar = () => {
             <Button
               size="sm"
               variant="outline"
-              className="w-full"
+              className="w-full touch-manipulation"
               onClick={() => setIsAddingProject(false)}
             >
               Cancel
@@ -74,13 +75,13 @@ export const Sidebar = () => {
             key={project.id}
             onClick={() => selectProject(project.id)}
             className={cn(
-              "w-full flex items-center gap-2 text-left px-3 py-2 rounded-lg transition-colors",
+              "w-full flex items-center gap-2 text-left px-4 py-3 rounded-lg transition-colors touch-manipulation",
               selectedProjectId === project.id
-                ? "bg-primary text-white"
-                : "hover:bg-gray-100"
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-muted"
             )}
           >
-            <Folder className="h-4 w-4" style={{ color: project.color }} />
+            <Folder className="h-4 w-4 shrink-0" style={{ color: project.color }} />
             <span className="truncate">{project.name}</span>
           </button>
         ))}

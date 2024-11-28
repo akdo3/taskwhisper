@@ -16,16 +16,16 @@ const Index = () => {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-        {/* Mobile Menu */}
-        <div className="md:hidden p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex justify-between items-center">
+        {/* Mobile Header */}
+        <div className="sticky top-0 z-50 md:hidden p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex justify-between items-center max-w-3xl mx-auto">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-4 w-4" />
+                <Button variant="outline" size="icon" className="touch-manipulation">
+                  <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0">
+              <SheetContent side="left" className="p-0 w-[80%] sm:w-[350px]">
                 <Sidebar />
               </SheetContent>
             </Sheet>
@@ -35,19 +35,32 @@ const Index = () => {
 
         <div className="flex">
           {/* Desktop Sidebar */}
-          <div className="hidden md:block animate-slide-in">
+          <div className="hidden md:block w-64 shrink-0 animate-slide-in">
             <Sidebar />
           </div>
           
-          <div className="flex-1 p-4 md:p-8 animate-fade-in">
-            <div className="max-w-3xl mx-auto">
-              <div className="hidden md:flex justify-end mb-4">
+          {/* Main Content */}
+          <div className="flex-1 p-4 md:p-8 w-full animate-fade-in overflow-x-hidden">
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="hidden md:flex justify-end">
                 <ThemeToggle />
               </div>
-              <ProgressStats />
-              <SmartSuggestions />
-              <TaskForm />
-              <TaskList />
+              
+              {/* Responsive grid for stats on mobile */}
+              <div className="px-2 sm:px-0">
+                <ProgressStats />
+              </div>
+              
+              {/* Smart suggestions with proper mobile spacing */}
+              <div className="px-2 sm:px-0">
+                <SmartSuggestions />
+              </div>
+              
+              {/* Task form and list with mobile-optimized spacing */}
+              <div className="space-y-4 px-2 sm:px-0">
+                <TaskForm />
+                <TaskList />
+              </div>
             </div>
           </div>
         </div>
