@@ -53,8 +53,20 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   body {
     @apply bg-background text-foreground antialiased transition-colors duration-300;
+    overscroll-behavior-y: none;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 
@@ -62,7 +74,6 @@
   @apply bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
 }
 
-/* Mobile optimizations */
 @layer utilities {
   .touch-target {
     @apply min-h-[44px] min-w-[44px];
@@ -74,5 +85,37 @@
   
   .mobile-container {
     @apply w-full max-w-[540px] sm:max-w-[720px] md:max-w-[960px] lg:max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
   }
 }
