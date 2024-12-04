@@ -11,6 +11,7 @@ interface TodoStore {
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
   addProject: (project: Omit<Project, 'id'>) => void;
+  updateProject: (projectId: string, updates: Partial<Omit<Project, 'id'>>) => void;
   selectProject: (projectId: string | null) => void;
   updateTaskRecurrence: (taskId: string, recurrence?: { type: 'daily' | 'weekly' | 'monthly' | 'yearly'; interval: number }) => void;
   setReminder: (taskId: string, reminderDate?: Date) => void;
@@ -84,6 +85,12 @@ export const useTodoStore = create<TodoStore>((set) => ({
   addProject: (project) =>
     set((state) => ({
       projects: [...state.projects, { ...project, id: Math.random().toString() }],
+    })),
+  updateProject: (projectId, updates) =>
+    set((state) => ({
+      projects: state.projects.map((project) =>
+        project.id === projectId ? { ...project, ...updates } : project
+      ),
     })),
   selectProject: (projectId) =>
     set({ selectedProjectId: projectId }),
