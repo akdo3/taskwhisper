@@ -28,13 +28,13 @@ export const Sidebar = () => {
 
   return (
     <div className="h-full bg-background p-4 overflow-y-auto scrollbar-hidden">
-      <div className="flex items-center justify-between mb-6 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-2">
+      <div className="flex items-center justify-between mb-6 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-2 z-10">
         <h2 className="text-lg font-semibold">Projects</h2>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsAddingProject(true)}
-          className="h-10 w-10 touch-target"
+          className="h-10 w-10 touch-target hover:bg-accent"
         >
           <Plus className="h-5 w-5" />
         </Button>
@@ -73,7 +73,7 @@ export const Sidebar = () => {
             key={project.id}
             onClick={() => selectProject(project.id)}
             className={cn(
-              "w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg transition-colors touch-target min-h-[48px]",
+              "w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg transition-colors touch-target min-h-[48px] hover:bg-accent/50",
               selectedProjectId === project.id
                 ? "bg-primary text-primary-foreground"
                 : "hover:bg-muted"

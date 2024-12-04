@@ -18,7 +18,7 @@
   }
 }
 
-/* Improved animations with configurable delays */
+/* Enhanced animations with configurable delays */
 .animate-slide-in {
   animation: slide-in 0.5s ease-out backwards;
   animation-delay: var(--slide-in-delay, 0ms);
@@ -33,4 +33,27 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Enhanced hover effects */
+.hover-scale {
+  transition: transform 0.2s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Enhanced focus styles */
+.focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
+/* Safe area utilities */
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pt-safe-top {
+  padding-top: env(safe-area-inset-top);
 }
