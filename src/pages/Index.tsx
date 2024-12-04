@@ -9,6 +9,7 @@ import { TaskList } from '@/components/TaskList';
 import { Sidebar } from '@/components/Sidebar';
 import { ProgressStats } from '@/components/ProgressStats';
 import { SmartSuggestions } from '@/components/SmartSuggestions';
+import { TaskWidget } from '@/components/TaskWidget';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -62,10 +63,15 @@ const Index = () => {
                     <SmartSuggestions />
                   </div>
                 </div>
-                <div className="animate-slide-in [--slide-in-delay:600ms]">
-                  <TaskForm />
+                <div className="grid gap-6 md:grid-cols-3">
+                  <div className="md:col-span-2 animate-slide-in [--slide-in-delay:600ms]">
+                    <TaskForm />
+                  </div>
+                  <div className="animate-slide-in [--slide-in-delay:800ms]">
+                    <TaskWidget />
+                  </div>
                 </div>
-                <div className="animate-slide-in [--slide-in-delay:800ms] pb-safe-bottom">
+                <div className="animate-slide-in [--slide-in-delay:1000ms] pb-safe-bottom">
                   <TaskList />
                 </div>
               </div>
