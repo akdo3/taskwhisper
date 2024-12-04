@@ -27,8 +27,8 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className="h-full bg-background p-4">
-      <div className="flex items-center justify-between mb-6">
+    <div className="h-full bg-background p-4 overflow-y-auto scrollbar-hidden">
+      <div className="flex items-center justify-between mb-6 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-2">
         <h2 className="text-lg font-semibold">Projects</h2>
         <Button
           variant="ghost"
@@ -41,7 +41,7 @@ export const Sidebar = () => {
       </div>
 
       {isAddingProject && (
-        <div className="mb-4 space-y-3">
+        <div className="mb-4 space-y-3 animate-fade-in">
           <Input
             placeholder="Project name"
             value={newProjectName}

@@ -13,9 +13,9 @@ const Index = () => {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-        {/* Mobile Header */}
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container flex h-16 items-center justify-between px-4">
+        {/* Mobile Header with improved spacing and touch targets */}
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 safe-top">
+          <div className="container flex h-16 items-center justify-between mobile-safe-padding">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden touch-target">
@@ -32,23 +32,32 @@ const Index = () => {
         </header>
 
         <div className="flex min-h-[calc(100vh-4rem)]">
-          {/* Desktop Sidebar */}
+          {/* Desktop Sidebar with improved scrolling */}
           <div className="hidden md:block w-64 xl:w-72 shrink-0 border-r border-border">
-            <div className="sticky top-16 overflow-y-auto h-[calc(100vh-4rem)]">
+            <div className="sticky top-16 overflow-y-auto h-[calc(100vh-4rem)] scrollbar-hidden">
               <Sidebar />
             </div>
           </div>
           
-          {/* Main Content */}
+          {/* Main Content with improved spacing and container width */}
           <main className="flex-1 w-full">
-            <div className="container py-6 px-4 md:px-6 lg:px-8 max-w-5xl mx-auto">
-              <div className="space-y-6">
+            <div className="mobile-container py-6">
+              <div className="space-y-6 animate-fade-in">
+                {/* Stats and Suggestions Grid with responsive layout */}
                 <div className="grid gap-6 md:grid-cols-2">
-                  <ProgressStats />
-                  <SmartSuggestions />
+                  <div className="animate-slide-in [--slide-in-delay:200ms]">
+                    <ProgressStats />
+                  </div>
+                  <div className="animate-slide-in [--slide-in-delay:400ms]">
+                    <SmartSuggestions />
+                  </div>
                 </div>
-                <TaskForm />
-                <TaskList />
+                <div className="animate-slide-in [--slide-in-delay:600ms]">
+                  <TaskForm />
+                </div>
+                <div className="animate-slide-in [--slide-in-delay:800ms]">
+                  <TaskList />
+                </div>
               </div>
             </div>
           </main>
