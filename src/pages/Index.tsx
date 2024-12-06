@@ -4,7 +4,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { ProgressStats } from '@/components/ProgressStats';
 import { SmartSuggestions } from '@/components/SmartSuggestions';
 import { TaskWidget } from '@/components/TaskWidget';
-import { Menu, Settings } from 'lucide-react';
+import { Menu, Settings, FolderPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -30,6 +30,12 @@ const Index = () => {
             <h1 className="text-xl font-semibold">TaskWhisper</h1>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/projects">
+              <Button variant="ghost" size="icon" className="touch-target">
+                <FolderPlus className="h-4 w-4" />
+                <span className="sr-only">Projects</span>
+              </Button>
+            </Link>
             <Link to="/settings">
               <Button variant="ghost" size="icon" className="touch-target">
                 <Settings className="h-4 w-4" />

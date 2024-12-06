@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
+import ProjectManagement from "./pages/ProjectManagement";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/projects" element={<ProjectManagement />} />
             </Routes>
           </BrowserRouter>
         </div>
