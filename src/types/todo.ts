@@ -11,6 +11,12 @@ export interface Attachment {
   title: string;
 }
 
+export interface Tag {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -27,6 +33,7 @@ export interface Task {
   subtasks: SubTask[];
   notes?: string;
   attachments: Attachment[];
+  tags: Tag[];
 }
 
 export interface Project {

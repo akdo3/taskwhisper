@@ -7,6 +7,7 @@ import { TaskFormBasicInfo } from './TaskFormDialog/TaskFormBasicInfo';
 import { TaskFormDates } from './TaskFormDialog/TaskFormDates';
 import { TaskFormRecurrence } from './TaskFormDialog/TaskFormRecurrence';
 import { TaskAttachments } from './TaskAttachments';
+import { TagsManager } from './TagsManager';
 import { toast } from 'sonner';
 
 export const TaskForm = () => {
@@ -19,6 +20,7 @@ export const TaskForm = () => {
   const [recurrenceInterval, setRecurrenceInterval] = useState(1);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium');
   const [attachments, setAttachments] = useState<Array<{ id: string; type: 'url' | 'image' | 'document'; url: string; title: string }>>([]);
+  const [tags, setTags] = useState<Array<{ id: string; name: string; color: string }>>([]);
 
   const { addTask, selectedProjectId, projects } = useTodoStore();
 
@@ -43,6 +45,7 @@ export const TaskForm = () => {
       recurrence,
       reminder,
       attachments,
+      tags,
     });
     
     setTitle('');
@@ -53,6 +56,7 @@ export const TaskForm = () => {
     setRecurrenceInterval(1);
     setPriority('medium');
     setAttachments([]);
+    setTags([]);
     setOpen(false);
     
     toast.success('Task added successfully');
@@ -93,6 +97,15 @@ export const TaskForm = () => {
             recurrenceInterval={recurrenceInterval}
             setRecurrenceInterval={setRecurrenceInterval}
           />
+          
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Tags</h3>
+            <TagsManager
+              selectedTags={tags}
+              onTagsChange={setTags}
+              availableTags={[]}
+            />
+          </div>
           
           <TaskAttachments
             attachments={attachments}

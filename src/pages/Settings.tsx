@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useTodoStore } from "@/store/todoStore";
 import { useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const languages = [
   { code: 'en', name: 'English' },
@@ -38,11 +39,7 @@ export default function Settings() {
     reminders: true,
     updates: false,
   });
-
-  const handleProjectUpdate = (projectId: string, name: string, color: string) => {
-    updateProject(projectId, { name, color });
-    toast.success("Project updated successfully");
-  };
+  const { setTheme } = useTheme();
 
   const handleNotificationChange = (key: keyof typeof notifications) => {
     setNotifications(prev => {
@@ -50,6 +47,35 @@ export default function Settings() {
       toast.success(`${key} notifications ${newSettings[key] ? 'enabled' : 'disabled'}`);
       return newSettings;
     });
+  };
+
+  const handleThemeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const themeData = JSON.parse(e.target?.result as string);
+        if (validateTheme(themeData)) {
+          localStorage.setItem('customTheme', JSON.stringify(themeData));
+          document.documentElement.style.setProperty('--background', themeData.background);
+          document.documentElement.style.setProperty('--foreground', themeData.foreground);
+          document.documentElement.style.setProperty('--primary', themeData.primary);
+          document.documentElement.style.setProperty('--secondary', themeData.secondary);
+          setTheme('custom');
+          toast.success('Custom theme applied successfully');
+        }
+      } catch (error) {
+        toast.error('Invalid theme file format');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const validateTheme = (theme: any) => {
+    const requiredColors = ['background', 'foreground', 'primary', 'secondary'];
+    return requiredColors.every(color => typeof theme[color] === 'string');
   };
 
   return (
@@ -71,6 +97,23 @@ export default function Settings() {
           <div className="flex items-center justify-between">
             <Label htmlFor="theme">Theme</Label>
             <ThemeToggle />
+          </div>
+          <div className="space-y-2">
+            <Label>Custom Theme</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="file"
+                accept=".json"
+                onChange={handleThemeUpload}
+                className="flex-1"
+              />
+              <Button variant="outline" size="icon">
+                <Upload className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Upload a JSON file with your custom theme colors
+            </p>
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="language">Language</Label>
@@ -140,13 +183,13 @@ export default function Settings() {
               <div className="flex items-center gap-4">
                 <Input
                   defaultValue={project.name}
-                  onBlur={(e) => handleProjectUpdate(project.id, e.target.value, project.color)}
+                  onBlur={(e) => updateProject(project.id, { name: e.target.value, color: project.color })}
                 />
                 <Input
                   type="color"
                   defaultValue={project.color}
                   className="w-20"
-                  onBlur={(e) => handleProjectUpdate(project.id, project.name, e.target.value)}
+                  onBlur={(e) => updateProject(project.id, { name: project.name, color: e.target.value })}
                 />
               </div>
             </div>
