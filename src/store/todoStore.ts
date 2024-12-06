@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Task, Project, SubTask, Attachment } from '../types/todo';
+import { Task, Project, SubTask, Attachment, Tag } from '../types/todo';
 import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -7,6 +7,7 @@ interface TodoStore {
   tasks: Task[];
   projects: Project[];
   selectedProjectId: string | null;
+  tags: Tag[];
   addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;  // Remove 'attachments' from Omit
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
@@ -19,6 +20,7 @@ interface TodoStore {
   toggleSubtask: (taskId: string, subtaskId: string) => void;
   deleteSubtask: (taskId: string, subtaskId: string) => void;
   updateTask: (taskId: string, updates: Partial<Omit<Task, 'id' | 'subtasks' | 'attachments'>>) => void;
+  addTag: (tag: Omit<Tag, 'id'>) => void;
 }
 
 const createNextDueDate = (currentDate: Date, recurrence: NonNullable<Task['recurrence']>) => {
@@ -41,6 +43,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
     { id: '2', name: 'Work', color: '#EC4899' },
   ],
   selectedProjectId: null,
+  tags: [],
   addTask: (task) =>
     set((state) => ({
       tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [], attachments: [] }],
@@ -150,6 +153,10 @@ export const useTodoStore = create<TodoStore>((set) => ({
       tasks: state.tasks.map((task) =>
         task.id === taskId ? { ...task, ...updates } : task
       ),
+    })),
+  addTag: (tag) =>
+    set((state) => ({
+      tags: [...state.tags, { ...tag, id: Math.random().toString() }],
     })),
 }));
 
