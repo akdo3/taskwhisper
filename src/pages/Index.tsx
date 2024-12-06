@@ -14,8 +14,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 safe-top">
-        <div className="container flex h-16 items-center justify-between mobile-safe-padding">
-          <div className="flex items-center gap-4">
+        <div className="container flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-2">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden touch-target hover:bg-accent">
@@ -23,11 +23,11 @@ const Index = () => {
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-[280px] sm:w-[350px]">
+              <SheetContent side="left" className="p-0 w-full sm:w-[350px]">
                 <Sidebar />
               </SheetContent>
             </Sheet>
-            <h1 className="text-xl font-semibold hidden sm:block">TaskWhisper</h1>
+            <h1 className="text-xl font-semibold">TaskWhisper</h1>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/settings">
@@ -49,9 +49,9 @@ const Index = () => {
         </div>
         
         <main className="flex-1 w-full bg-background/50">
-          <div className="mobile-container py-6">
-            <div className="space-y-8 animate-fade-in">
-              <div className="grid gap-6 md:grid-cols-2">
+          <div className="container py-6 px-4">
+            <div className="space-y-6 animate-fade-in">
+              <div className="grid gap-4 sm:gap-6">
                 <div className="animate-slide-in [--slide-in-delay:200ms]">
                   <ProgressStats />
                 </div>
@@ -59,8 +59,8 @@ const Index = () => {
                   <SmartSuggestions />
                 </div>
               </div>
-              <div className="grid gap-6 md:grid-cols-3">
-                <div className="md:col-span-2 animate-slide-in [--slide-in-delay:600ms]">
+              <div className="grid gap-4 sm:gap-6">
+                <div className="animate-slide-in [--slide-in-delay:600ms]">
                   <TaskForm />
                 </div>
                 <div className="animate-slide-in [--slide-in-delay:800ms]">

@@ -67,7 +67,7 @@ export const Sidebar = () => {
         </div>
       )}
 
-      <div className="space-y-1">
+      <div className="space-y-2">
         {projects.map((project) => (
           <button
             key={project.id}
