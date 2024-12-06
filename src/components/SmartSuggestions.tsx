@@ -50,7 +50,8 @@ export const SmartSuggestions = () => {
         type: 'weekly',
         interval: 1,
       },
-      attachments: [], // Add this line to include empty attachments array
+      attachments: [],
+      tags: [], // Add empty tags array to fix the type error
     });
     toast.success('Recurring task created!');
   };
