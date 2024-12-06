@@ -1,45 +1,32 @@
 import { useState } from 'react';
-import { Plus, Calendar, Bell, Repeat, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { format } from 'date-fns';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useTodoStore } from '../store/todoStore';
+import { TaskFormBasicInfo } from './TaskFormDialog/TaskFormBasicInfo';
+import { TaskFormDates } from './TaskFormDialog/TaskFormDates';
+import { TaskFormRecurrence } from './TaskFormDialog/TaskFormRecurrence';
+import { TaskAttachments } from './TaskAttachments';
+import { toast } from 'sonner';
 
 export const TaskForm = () => {
-  const [newTask, setNewTask] = useState('');
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState<Date>();
   const [reminder, setReminder] = useState<Date>();
   const [recurrenceType, setRecurrenceType] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>();
   const [recurrenceInterval, setRecurrenceInterval] = useState(1);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium');
-  const [newSubtask, setNewSubtask] = useState('');
-  const [subtasks, setSubtasks] = useState<{ title: string }[]>([]);
+  const [attachments, setAttachments] = useState<Array<{ id: string; type: 'url' | 'image' | 'document'; url: string; title: string }>>([]);
 
   const { addTask, selectedProjectId, projects } = useTodoStore();
 
-  const handleAddSubtask = () => {
-    if (!newSubtask.trim()) return;
-    setSubtasks([...subtasks, { title: newSubtask }]);
-    setNewSubtask('');
-  };
-
-  const removeSubtask = (index: number) => {
-    setSubtasks(subtasks.filter((_, i) => i !== index));
-  };
-
   const handleAddTask = () => {
-    if (!newTask.trim()) return;
+    if (!title.trim()) {
+      toast.error('Please enter a task title');
+      return;
+    }
     
     const recurrence = recurrenceType ? {
       type: recurrenceType,
@@ -47,7 +34,7 @@ export const TaskForm = () => {
     } : undefined;
     
     addTask({
-      title: newTask,
+      title,
       description,
       completed: false,
       dueDate: date,
@@ -55,149 +42,73 @@ export const TaskForm = () => {
       priority,
       recurrence,
       reminder,
+      attachments,
     });
     
-    setNewTask('');
+    setTitle('');
     setDescription('');
     setDate(undefined);
     setReminder(undefined);
     setRecurrenceType(undefined);
     setRecurrenceInterval(1);
     setPriority('medium');
-    setSubtasks([]);
+    setAttachments([]);
+    setOpen(false);
+    
+    toast.success('Task added successfully');
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-      <div className="flex gap-4 mb-4">
-        <Input
-          placeholder="Add a new task..."
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          className="flex-1"
-        />
-        <Button onClick={handleAddTask}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="w-full">
           <Plus className="w-4 h-4 mr-2" />
           Add Task
         </Button>
-      </div>
-      
-      <Textarea
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="mb-4"
-      />
-      
-      <div className="flex gap-4 mb-4">
-        <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Priority" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="low">Low Priority</SelectItem>
-            <SelectItem value="medium">Medium Priority</SelectItem>
-            <SelectItem value="high">High Priority</SelectItem>
-            <SelectItem value="urgent">Urgent</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">
-              <Calendar className="w-4 h-4 mr-2" />
-              {date ? format(date, 'PPP') : 'Pick a due date'}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <CalendarComponent
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-        
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">
-              <Bell className="w-4 h-4 mr-2" />
-              {reminder ? format(reminder, 'PPP') : 'Set reminder'}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <CalendarComponent
-              mode="single"
-              selected={reminder}
-              onSelect={setReminder}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-      
-      <div className="flex gap-4 mb-4">
-        <Select
-          value={recurrenceType}
-          onValueChange={(value: any) => setRecurrenceType(value)}
-        >
-          <SelectTrigger className="w-[180px]">
-            <Repeat className="w-4 h-4 mr-2" />
-            <SelectValue placeholder="Recurrence" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="daily">Daily</SelectItem>
-            <SelectItem value="weekly">Weekly</SelectItem>
-            <SelectItem value="monthly">Monthly</SelectItem>
-            <SelectItem value="yearly">Yearly</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        {recurrenceType && (
-          <Input
-            type="number"
-            min="1"
-            value={recurrenceInterval}
-            onChange={(e) => setRecurrenceInterval(parseInt(e.target.value) || 1)}
-            className="w-24"
-            placeholder="Interval"
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Add New Task</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-6 py-4">
+          <TaskFormBasicInfo
+            title={title}
+            setTitle={setTitle}
+            description={description}
+            setDescription={setDescription}
+            priority={priority}
+            setPriority={setPriority}
           />
-        )}
-      </div>
-
-      <div className="border-t pt-4 mt-4">
-        <h3 className="text-sm font-medium mb-2">Subtasks</h3>
-        <div className="flex gap-2 mb-2">
-          <Input
-            placeholder="Add a subtask..."
-            value={newSubtask}
-            onChange={(e) => setNewSubtask(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddSubtask()}
-            className="flex-1"
+          
+          <TaskFormDates
+            dueDate={date}
+            setDueDate={setDate}
+            reminder={reminder}
+            setReminder={setReminder}
           />
-          <Button onClick={handleAddSubtask} variant="outline">
-            <Plus className="w-4 h-4" />
-          </Button>
+          
+          <TaskFormRecurrence
+            recurrenceType={recurrenceType}
+            setRecurrenceType={setRecurrenceType}
+            recurrenceInterval={recurrenceInterval}
+            setRecurrenceInterval={setRecurrenceInterval}
+          />
+          
+          <TaskAttachments
+            attachments={attachments}
+            onAddAttachment={(attachment) => setAttachments([...attachments, attachment])}
+            onRemoveAttachment={(attachmentId) => 
+              setAttachments(attachments.filter(a => a.id !== attachmentId))
+            }
+          />
+          
+          <div className="flex justify-end">
+            <Button onClick={handleAddTask}>
+              Add Task
+            </Button>
+          </div>
         </div>
-        {subtasks.length > 0 && (
-          <ul className="space-y-2">
-            {subtasks.map((subtask, index) => (
-              <li key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded">
-                <span className="flex-1">{subtask.title}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeSubtask(index)}
-                  className="h-6 w-6 p-0"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
