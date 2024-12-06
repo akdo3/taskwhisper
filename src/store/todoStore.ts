@@ -7,7 +7,7 @@ interface TodoStore {
   tasks: Task[];
   projects: Project[];
   selectedProjectId: string | null;
-  addTask: (task: Omit<Task, 'id' | 'subtasks' | 'attachments'>) => void;
+  addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;  // Remove 'attachments' from Omit
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
   addProject: (project: Omit<Project, 'id'>) => void;
@@ -45,6 +45,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
     set((state) => ({
       tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [], attachments: [] }],
     })),
+
   toggleTask: (taskId) =>
     set((state) => {
       const task = state.tasks.find(t => t.id === taskId);
