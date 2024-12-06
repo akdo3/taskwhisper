@@ -50,6 +50,7 @@ export const SmartSuggestions = () => {
         type: 'weekly',
         interval: 1,
       },
+      attachments: [], // Add this line to include empty attachments array
     });
     toast.success('Recurring task created!');
   };
