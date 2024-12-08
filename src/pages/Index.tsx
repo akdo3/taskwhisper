@@ -3,12 +3,10 @@ import { TaskList } from '@/components/TaskList';
 import { ProgressStats } from '@/components/ProgressStats';
 import { SmartSuggestions } from '@/components/SmartSuggestions';
 import { TaskWidget } from '@/components/TaskWidget';
-import { Settings } from 'lucide-react';
+import { Settings, BarChart2, FolderKanban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Link } from 'react-router-dom';
-import { ProjectCreator } from '@/components/ProjectCreator';
-import { TagCreator } from '@/components/TagCreator';
 
 const Index = () => {
   return (
@@ -17,6 +15,18 @@ const Index = () => {
         <div className="container flex h-16 items-center justify-between px-4">
           <h1 className="text-xl font-semibold">TaskWhisper</h1>
           <div className="flex items-center gap-2">
+            <Link to="/projects">
+              <Button variant="ghost" size="icon" className="touch-target">
+                <FolderKanban className="h-4 w-4" />
+                <span className="sr-only">Projects</span>
+              </Button>
+            </Link>
+            <Link to="/analytics">
+              <Button variant="ghost" size="icon" className="touch-target">
+                <BarChart2 className="h-4 w-4" />
+                <span className="sr-only">Analytics</span>
+              </Button>
+            </Link>
             <Link to="/settings">
               <Button variant="ghost" size="icon" className="touch-target">
                 <Settings className="h-4 w-4" />
@@ -40,14 +50,6 @@ const Index = () => {
               </div>
             </div>
             <div className="grid gap-4 sm:gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="animate-slide-in [--slide-in-delay:500ms]">
-                  <ProjectCreator />
-                </div>
-                <div className="animate-slide-in [--slide-in-delay:600ms]">
-                  <TagCreator />
-                </div>
-              </div>
               <div className="animate-slide-in [--slide-in-delay:700ms]">
                 <TaskForm />
               </div>
