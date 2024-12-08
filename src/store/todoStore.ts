@@ -8,7 +8,7 @@ interface TodoStore {
   projects: Project[];
   selectedProjectId: string | null;
   tags: Tag[];
-  addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;  // Remove 'attachments' from Omit
+  addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
   addProject: (project: Omit<Project, 'id'>) => void;
@@ -21,6 +21,7 @@ interface TodoStore {
   deleteSubtask: (taskId: string, subtaskId: string) => void;
   updateTask: (taskId: string, updates: Partial<Omit<Task, 'id' | 'subtasks' | 'attachments'>>) => void;
   addTag: (tag: Omit<Tag, 'id'>) => void;
+  updateTag: (tagId: string, updates: Partial<Omit<Tag, 'id'>>) => void;
 }
 
 const createNextDueDate = (currentDate: Date, recurrence: NonNullable<Task['recurrence']>) => {
@@ -157,6 +158,12 @@ export const useTodoStore = create<TodoStore>((set) => ({
   addTag: (tag) =>
     set((state) => ({
       tags: [...state.tags, { ...tag, id: Math.random().toString() }],
+    })),
+  updateTag: (tagId, updates) =>
+    set((state) => ({
+      tags: state.tags.map((tag) =>
+        tag.id === tagId ? { ...tag, ...updates } : tag
+      ),
     })),
 }));
 
