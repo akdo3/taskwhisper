@@ -9,10 +9,11 @@ import { TaskFormRecurrence } from '../TaskFormDialog/TaskFormRecurrence';
 import { TaskAttachments } from '../TaskAttachments';
 import { TagsManager } from '../TagsManager';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ProjectSelector } from './ProjectSelector';
+import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { NewTask } from '@/types/todo';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const TaskForm = () => {
   const [open, setOpen] = useState(false);
@@ -27,9 +28,22 @@ export const TaskForm = () => {
   const [tags, setTags] = useState<Array<{ id: string; name: string; color: string }>>([]);
   const [categoryId, setCategoryId] = useState<string>();
   const [projectId, setProjectId] = useState<string>();
+  const [newProjectName, setNewProjectName] = useState('');
   const [subtasks, setSubtasks] = useState<Array<{ id: string; title: string; completed: false }>>([]);
+  const [newSubtask, setNewSubtask] = useState('');
 
   const { addTask, projects, categories, tags: availableTags, addProject } = useTodoStore();
+
+  const handleAddProject = () => {
+    if (!newProjectName.trim()) {
+      toast.error('Please enter a project name');
+      return;
+    }
+    const newProject = addProject({ name: newProjectName, color: '#8B5CF6' });
+    setProjectId(newProject.id);
+    setNewProjectName('');
+    toast.success('Project created successfully');
+  };
 
   const handleAddTask = () => {
     if (!title.trim()) {
@@ -58,22 +72,7 @@ export const TaskForm = () => {
     };
     
     addTask(newTask);
-    
-    // Reset form
-    setTitle('');
-    setDescription('');
-    setDate(undefined);
-    setReminder(undefined);
-    setRecurrenceType(undefined);
-    setRecurrenceInterval(1);
-    setPriority('medium');
-    setAttachments([]);
-    setTags([]);
-    setCategoryId(undefined);
-    setProjectId(undefined);
-    setSubtasks([]);
     setOpen(false);
-    
     toast.success('Task added successfully');
   };
 
@@ -85,11 +84,12 @@ export const TaskForm = () => {
           Add Task
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Add New Task</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 py-4">
+        
+        <div className="space-y-4">
           <TaskFormBasicInfo
             title={title}
             setTitle={setTitle}
@@ -99,63 +99,98 @@ export const TaskForm = () => {
             setPriority={setPriority}
           />
           
-          <div className="space-y-4">
-            <ProjectSelector
-              projects={projects}
-              projectId={projectId}
-              setProjectId={setProjectId}
-              addProject={addProject}
-            />
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Category</label>
-              <Select value={categoryId} onValueChange={setCategoryId}>
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <Select value={projectId} onValueChange={setProjectId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder="Select project" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
+                  {projects.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+            
+            <div className="flex gap-2 items-center">
+              <Input
+                placeholder="New project"
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                className="w-32"
+              />
+              <Button variant="outline" onClick={handleAddProject} className="whitespace-nowrap">
+                <Plus className="w-4 h-4 mr-2" />
+                Create
+              </Button>
+            </div>
           </div>
+
+          <Select value={categoryId} onValueChange={setCategoryId}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Tabs defaultValue="dates" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="dates">Dates</TabsTrigger>
+              <TabsTrigger value="recurrence">Recurrence</TabsTrigger>
+              <TabsTrigger value="tags">Tags</TabsTrigger>
+              <TabsTrigger value="attachments">Attachments</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="dates">
+              <TaskFormDates
+                dueDate={date}
+                setDueDate={setDate}
+                reminder={reminder}
+                setReminder={setReminder}
+              />
+            </TabsContent>
+            
+            <TabsContent value="recurrence">
+              <TaskFormRecurrence
+                recurrenceType={recurrenceType}
+                setRecurrenceType={setRecurrenceType}
+                recurrenceInterval={recurrenceInterval}
+                setRecurrenceInterval={setRecurrenceInterval}
+              />
+            </TabsContent>
+            
+            <TabsContent value="tags">
+              <TagsManager
+                selectedTags={tags}
+                onTagsChange={setTags}
+                availableTags={availableTags}
+              />
+            </TabsContent>
+            
+            <TabsContent value="attachments">
+              <TaskAttachments
+                attachments={attachments}
+                onAddAttachment={(attachment) => setAttachments([...attachments, attachment])}
+                onRemoveAttachment={(attachmentId) => 
+                  setAttachments(attachments.filter(a => a.id !== attachmentId))
+                }
+              />
+            </TabsContent>
+          </Tabs>
           
-          <TaskFormDates
-            dueDate={date}
-            setDueDate={setDate}
-            reminder={reminder}
-            setReminder={setReminder}
-          />
-          
-          <TaskFormRecurrence
-            recurrenceType={recurrenceType}
-            setRecurrenceType={setRecurrenceType}
-            recurrenceInterval={recurrenceInterval}
-            setRecurrenceInterval={setRecurrenceInterval}
-          />
-          
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium">Tags</h3>
-            <TagsManager
-              selectedTags={tags}
-              onTagsChange={setTags}
-              availableTags={availableTags}
-            />
-          </div>
-          
-          <TaskAttachments
-            attachments={attachments}
-            onAddAttachment={(attachment) => setAttachments([...attachments, attachment])}
-            onRemoveAttachment={(attachmentId) => 
-              setAttachments(attachments.filter(a => a.id !== attachmentId))
-            }
-          />
-          
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
             <Button onClick={handleAddTask}>
               Add Task
             </Button>
