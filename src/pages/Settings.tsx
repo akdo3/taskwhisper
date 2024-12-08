@@ -8,7 +8,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { ArrowLeft, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { useTodoStore } from "@/store/todoStore";
 import { useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 
@@ -31,7 +30,6 @@ const languages = [
 ];
 
 export default function Settings() {
-  const { projects, updateProject } = useTodoStore();
   const [language, setLanguage] = useState('en');
   const [notifications, setNotifications] = useState({
     email: false,
@@ -170,30 +168,6 @@ export default function Settings() {
               onCheckedChange={() => handleNotificationChange('updates')}
             />
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Projects</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {projects.map((project) => (
-            <div key={project.id} className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Input
-                  defaultValue={project.name}
-                  onBlur={(e) => updateProject(project.id, { name: e.target.value, color: project.color })}
-                />
-                <Input
-                  type="color"
-                  defaultValue={project.color}
-                  className="w-20"
-                  onBlur={(e) => updateProject(project.id, { name: project.name, color: e.target.value })}
-                />
-              </div>
-            </div>
-          ))}
         </CardContent>
       </Card>
     </div>

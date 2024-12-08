@@ -1,8 +1,5 @@
 import { TaskForm } from '@/components/TaskForm';
 import { TaskList } from '@/components/TaskList';
-import { ProgressStats } from '@/components/ProgressStats';
-import { SmartSuggestions } from '@/components/SmartSuggestions';
-import { TaskWidget } from '@/components/TaskWidget';
 import { Settings, BarChart2, FolderKanban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -41,21 +38,8 @@ const Index = () => {
       <main className="flex-1 w-full bg-background/50">
         <div className="container py-6 px-4">
           <div className="space-y-6 animate-fade-in">
-            <div className="grid gap-4 sm:gap-6">
-              <div className="animate-slide-in [--slide-in-delay:200ms]">
-                <ProgressStats />
-              </div>
-              <div className="animate-slide-in [--slide-in-delay:400ms]">
-                <SmartSuggestions />
-              </div>
-            </div>
-            <div className="grid gap-4 sm:gap-6">
-              <div className="animate-slide-in [--slide-in-delay:700ms]">
-                <TaskForm />
-              </div>
-              <div className="animate-slide-in [--slide-in-delay:800ms]">
-                <TaskWidget />
-              </div>
+            <div className="animate-slide-in [--slide-in-delay:700ms]">
+              <TaskForm />
             </div>
             <div className="animate-slide-in [--slide-in-delay:1000ms] pb-safe-bottom">
               <TaskList />

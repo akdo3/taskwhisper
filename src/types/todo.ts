@@ -17,6 +17,13 @@ export interface Tag {
   color: string;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  color: string;
+  description?: string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -24,6 +31,7 @@ export interface Task {
   completed: boolean;
   dueDate?: Date;
   projectId: string;
+  categoryId?: string;
   priority: 'low' | 'medium' | 'high' | 'urgent';
   recurrence?: {
     type: 'daily' | 'weekly' | 'monthly' | 'yearly';

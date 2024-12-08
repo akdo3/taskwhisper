@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Task, Project, SubTask, Attachment, Tag } from '../types/todo';
+import { Task, Project, SubTask, Attachment, Tag, Category } from '../types/todo';
 import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -8,6 +8,7 @@ interface TodoStore {
   projects: Project[];
   selectedProjectId: string | null;
   tags: Tag[];
+  categories: Category[];
   addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
@@ -22,6 +23,9 @@ interface TodoStore {
   updateTask: (taskId: string, updates: Partial<Omit<Task, 'id' | 'subtasks' | 'attachments'>>) => void;
   addTag: (tag: Omit<Tag, 'id'>) => void;
   updateTag: (tagId: string, updates: Partial<Omit<Tag, 'id'>>) => void;
+  addCategory: (category: Omit<Category, 'id'>) => void;
+  updateCategory: (categoryId: string, updates: Partial<Omit<Category, 'id'>>) => void;
+  deleteCategory: (categoryId: string) => void;
 }
 
 const createNextDueDate = (currentDate: Date, recurrence: NonNullable<Task['recurrence']>) => {
@@ -45,6 +49,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
   ],
   selectedProjectId: null,
   tags: [],
+  categories: [],
   addTask: (task) =>
     set((state) => ({
       tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [], attachments: [] }],
@@ -155,6 +160,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
         task.id === taskId ? { ...task, ...updates } : task
       ),
     })),
+
   addTag: (tag) =>
     set((state) => ({
       tags: [...state.tags, { ...tag, id: Math.random().toString() }],
@@ -165,9 +171,25 @@ export const useTodoStore = create<TodoStore>((set) => ({
         tag.id === tagId ? { ...tag, ...updates } : tag
       ),
     })),
+  addCategory: (category) =>
+    set((state) => ({
+      categories: [...state.categories, { ...category, id: Math.random().toString() }],
+    })),
+  updateCategory: (categoryId, updates) =>
+    set((state) => ({
+      categories: state.categories.map((category) =>
+        category.id === categoryId ? { ...category, ...updates } : category
+      ),
+    })),
+  deleteCategory: (categoryId) =>
+    set((state) => ({
+      categories: state.categories.filter((category) => category.id !== categoryId),
+      tasks: state.tasks.map((task) =>
+        task.categoryId === categoryId ? { ...task, categoryId: undefined } : task
+      ),
+    })),
 }));
 
-// Check for reminders every minute
 if (typeof window !== 'undefined') {
   setInterval(() => {
     const store = useTodoStore.getState();
