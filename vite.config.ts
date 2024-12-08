@@ -1,21 +1,21 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react'; // استبدلها بالمكون الخاص بك إذا كنت تستخدم إطار عمل آخر
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+// الإعدادات
+export default defineConfig({
+  base: "/repository-name/", // استبدل "repository-name" باسم المشروع الخاص بك
+  plugins: [react()], // أضف أو عدل المكونات الإضافية حسب حاجتك
   server: {
-    host: "::",
-    port: 8080,
+    port: 3000, // المنفذ المحلي
+    open: true, // افتح المتصفح تلقائيًا عند التشغيل
   },
-  plugins: [
-    react(),
-    mode === 'development' && componentTagger(),
-  ].filter(Boolean),
+  build: {
+    outDir: "dist", // مكان وضع الملفات الناتجة بعد البناء
+    sourcemap: true, // خريطة المصدر لتسهيل تتبع الأخطاء
+  },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': '/src', // اختصار للوصول إلى المجلد "src"
     },
   },
-}));
+});
