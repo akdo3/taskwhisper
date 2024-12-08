@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { NewTask } from '@/types/todo';
 
 export const TaskForm = () => {
   const [open, setOpen] = useState(false);
@@ -66,7 +67,7 @@ export const TaskForm = () => {
       interval: recurrenceInterval
     } : undefined;
     
-    addTask({
+    const newTask: NewTask = {
       title,
       description,
       completed: false,
@@ -79,7 +80,9 @@ export const TaskForm = () => {
       attachments,
       tags,
       subtasks,
-    });
+    };
+    
+    addTask(newTask);
     
     // Reset form
     setTitle('');

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Task, Project, SubTask, Attachment, Tag, Category } from '../types/todo';
+import { Task, Project, SubTask, Attachment, Tag, Category, NewTask } from '../types/todo';
 import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -9,10 +9,10 @@ interface TodoStore {
   selectedProjectId: string | null;
   tags: Tag[];
   categories: Category[];
-  addTask: (task: Omit<Task, 'id' | 'subtasks'>) => void;
+  addTask: (task: NewTask) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
-  addProject: (project: Omit<Project, 'id'>) => void;
+  addProject: (project: Omit<Project, 'id'>) => Project;
   updateProject: (projectId: string, updates: Partial<Omit<Project, 'id'>>) => void;
   selectProject: (projectId: string | null) => void;
   updateTaskRecurrence: (taskId: string, recurrence?: { type: 'daily' | 'weekly' | 'monthly' | 'yearly'; interval: number }) => void;
@@ -54,7 +54,13 @@ export const useTodoStore = create<TodoStore>((set) => ({
     set((state) => ({
       tasks: [...state.tasks, { ...task, id: Math.random().toString(), subtasks: [], attachments: [] }],
     })),
-
+  addProject: (project) => {
+    const newProject = { ...project, id: Math.random().toString() };
+    set((state) => ({
+      projects: [...state.projects, newProject],
+    }));
+    return newProject;
+  },
   toggleTask: (taskId) =>
     set((state) => {
       const task = state.tasks.find(t => t.id === taskId);
@@ -91,10 +97,6 @@ export const useTodoStore = create<TodoStore>((set) => ({
   deleteTask: (taskId) =>
     set((state) => ({
       tasks: state.tasks.filter((task) => task.id !== taskId),
-    })),
-  addProject: (project) =>
-    set((state) => ({
-      projects: [...state.projects, { ...project, id: Math.random().toString() }],
     })),
   updateProject: (projectId, updates) =>
     set((state) => ({
@@ -160,7 +162,6 @@ export const useTodoStore = create<TodoStore>((set) => ({
         task.id === taskId ? { ...task, ...updates } : task
       ),
     })),
-
   addTag: (tag) =>
     set((state) => ({
       tags: [...state.tags, { ...tag, id: Math.random().toString() }],
