@@ -51,7 +51,8 @@ export const SmartSuggestions = () => {
         interval: 1,
       },
       attachments: [],
-      tags: [], // Add empty tags array to fix the type error
+      tags: [],
+      subtasks: [], // Add the missing subtasks property
     });
     toast.success('Recurring task created!');
   };
