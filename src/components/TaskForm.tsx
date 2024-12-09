@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useTodoStore } from '../store/todoStore';
@@ -62,6 +62,20 @@ export const TaskForm = () => {
     addTask(newTask);
     setOpen(false);
     toast.success('Task added successfully');
+  };
+
+  const handleAddSubtask = () => {
+    if (newSubtask.trim()) {
+      setSubtasks([
+        ...subtasks,
+        { id: Math.random().toString(), title: newSubtask.trim(), completed: false }
+      ]);
+      setNewSubtask('');
+    }
+  };
+
+  const removeSubtask = (subtaskId: string) => {
+    setSubtasks(subtasks.filter(st => st.id !== subtaskId));
   };
 
   return (
