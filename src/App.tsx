@@ -28,6 +28,7 @@ const persister = createSyncStoragePersister({
   key: 'taskwhisper-query-cache',
 });
 
+// Initialize persistence
 persistQueryClient({
   queryClient,
   persister,
