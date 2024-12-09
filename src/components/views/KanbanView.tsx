@@ -3,7 +3,15 @@ import { useTodoStore } from '../../store/todoStore';
 import { TaskItem } from '../TaskItem';
 
 export const KanbanView = () => {
-  const { tasks, updateTask } = useTodoStore();
+  const {
+    tasks,
+    updateTask,
+    toggleTask,
+    deleteTask,
+    addSubtask,
+    toggleSubtask,
+    deleteSubtask
+  } = useTodoStore();
 
   const columns = [
     { id: 'todo', title: 'To Do', tasks: tasks.filter(t => !t.completed) },
@@ -32,7 +40,16 @@ export const KanbanView = () => {
             <h3 className="font-semibold mb-4">{column.title}</h3>
             <div className="space-y-4">
               {column.tasks.map(task => (
-                <TaskItem key={task.id} task={task} />
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onToggle={toggleTask}
+                  onDelete={deleteTask}
+                  onEdit={updateTask}
+                  onAddSubtask={addSubtask}
+                  onToggleSubtask={toggleSubtask}
+                  onDeleteSubtask={deleteSubtask}
+                />
               ))}
             </div>
           </div>
