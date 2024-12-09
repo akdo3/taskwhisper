@@ -10,27 +10,7 @@ import { showNotification } from '../utils/notifications';
 type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice;
 
 export const useTodoStore = create<TodoStore>((set) => ({
-  ...createTaskSlice(set, {
-    onTaskAdd: async (task) => {
-      await saveTask(task);
-      showNotification('New Task Added', {
-        body: task.title,
-        icon: '/favicon.ico'
-      });
-    },
-    onTaskDelete: async (taskId) => {
-      await deleteTaskFromDB(taskId);
-    },
-    onTaskUpdate: async (task) => {
-      await saveTask(task);
-      if (task.completed) {
-        showNotification('Task Completed', {
-          body: task.title,
-          icon: '/favicon.ico'
-        });
-      }
-    },
-  }),
+  ...createTaskSlice(set),
   ...createProjectSlice(set),
   ...createTagSlice(set),
   ...createCategorySlice(set),
