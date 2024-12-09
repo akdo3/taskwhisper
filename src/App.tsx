@@ -11,22 +11,27 @@ import Settings from "./pages/Settings";
 import ProjectManagement from "./pages/ProjectManagement";
 import Analytics from "./pages/Analytics";
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
-import { createIDBPersister } from '@tanstack/query-persist-client-indexeddb';
+import { createSyncStoragePersister } from '@tanstack/query-persist-client-core';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 30, // 30 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes
     },
   },
 });
 
-// Configure persistence for offline support
-const persister = createIDBPersister('taskwhisper-query-cache');
+// Configure persistence for offline support using localStorage
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+  key: 'taskwhisper-query-cache',
+});
+
 persistQueryClient({
   queryClient,
   persister,
+  maxAge: 1000 * 60 * 60 * 24, // 24 hours
 });
 
 // Register service worker
