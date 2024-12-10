@@ -1,13 +1,45 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProjectCreator } from '@/components/ProjectCreator';
 import { TagCreator } from '@/components/TagCreator';
 import { useTodoStore } from '@/store/todoStore';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function ProjectManagement() {
-  const { projects, tags, updateProject, updateTag } = useTodoStore();
+  const { projects, tags, updateProject, updateTag, deleteProject, deleteTag } = useTodoStore();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{ type: 'project' | 'tag', id: string } | null>(null);
+
+  const handleDelete = () => {
+    if (!itemToDelete) return;
+
+    if (itemToDelete.type === 'project') {
+      deleteProject(itemToDelete.id);
+      toast.success('Project deleted successfully');
+    } else {
+      deleteTag(itemToDelete.id);
+      toast.success('Tag deleted successfully');
+    }
+    setDeleteDialogOpen(false);
+    setItemToDelete(null);
+  };
+
+  const confirmDelete = (type: 'project' | 'tag', id: string) => {
+    setItemToDelete({ type, id });
+    setDeleteDialogOpen(true);
+  };
 
   return (
     <div className="container max-w-4xl py-6 space-y-8">
@@ -41,6 +73,14 @@ export default function ProjectManagement() {
                   onChange={(e) => updateProject(project.id, { name: project.name, color: e.target.value })}
                   className="w-20"
                 />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => confirmDelete('project', project.id)}
+                  className="text-destructive hover:text-destructive/90"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             ))}
           </div>
@@ -63,11 +103,36 @@ export default function ProjectManagement() {
                   onChange={(e) => updateTag(tag.id, { name: tag.name, color: e.target.value })}
                   className="w-20"
                 />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => confirmDelete('tag', tag.id)}
+                  className="text-destructive hover:text-destructive/90"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the {itemToDelete?.type}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

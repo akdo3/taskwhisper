@@ -96,6 +96,12 @@ export default function Settings() {
             <Label htmlFor="theme">Theme</Label>
             <ThemeToggle />
           </div>
+          <Link to="/theme">
+            <Button variant="outline" className="w-full">
+              <Palette className="h-4 w-4 mr-2" />
+              Customize Theme
+            </Button>
+          </Link>
           <div className="space-y-2">
             <Label>Custom Theme</Label>
             <div className="flex items-center gap-2">
