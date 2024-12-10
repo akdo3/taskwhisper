@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ArrowLeft, Upload, Palette } from "lucide-react";
+import { ArrowLeft, Upload, Palette as PaletteIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -57,10 +57,10 @@ export default function Settings() {
         const themeData = JSON.parse(e.target?.result as string);
         if (validateTheme(themeData)) {
           localStorage.setItem('customTheme', JSON.stringify(themeData));
-          document.documentElement.style.setProperty('--background', themeData.background);
-          document.documentElement.style.setProperty('--foreground', themeData.foreground);
-          document.documentElement.style.setProperty('--primary', themeData.primary);
-          document.documentElement.style.setProperty('--secondary', themeData.secondary);
+          document.documentElement.style.setProperty('--background', themeData.colors.background);
+          document.documentElement.style.setProperty('--foreground', themeData.colors.foreground);
+          document.documentElement.style.setProperty('--primary', themeData.colors.primary);
+          document.documentElement.style.setProperty('--secondary', themeData.colors.secondary);
           setTheme('custom');
           toast.success('Custom theme applied successfully');
         }
@@ -73,7 +73,7 @@ export default function Settings() {
 
   const validateTheme = (theme: any) => {
     const requiredColors = ['background', 'foreground', 'primary', 'secondary'];
-    return requiredColors.every(color => typeof theme[color] === 'string');
+    return requiredColors.every(color => typeof theme.colors[color] === 'string');
   };
 
   return (
@@ -98,7 +98,7 @@ export default function Settings() {
           </div>
           <Link to="/theme">
             <Button variant="outline" className="w-full">
-              <Palette className="h-4 w-4 mr-2" />
+              <PaletteIcon className="h-4 w-4 mr-2" />
               Customize Theme
             </Button>
           </Link>
