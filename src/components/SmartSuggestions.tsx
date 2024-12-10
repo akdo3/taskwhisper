@@ -52,7 +52,7 @@ export const SmartSuggestions = () => {
       },
       attachments: [],
       tags: [],
-      subtasks: [], // Add the missing subtasks property
+      subtasks: [],
     });
     toast.success('Recurring task created!');
   };
