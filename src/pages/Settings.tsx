@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, Upload, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useState } from "react";
