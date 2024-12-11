@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy } from 'lucide-react';
+import { ArrowLeft, Copy, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/components/ThemeProvider';
 import { toast } from 'sonner';
 import { CustomThemeForm } from '@/components/theme/CustomThemeForm';
 import { PresetThemes } from '@/components/theme/PresetThemes';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { NavigationMenu } from '@/components/NavigationMenu';
 
 const presetThemes = [
   {
@@ -81,49 +83,64 @@ export default function ThemeCustomizer() {
   };
 
   return (
-    <div className="container max-w-4xl py-6 space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/settings">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
+    <div className="min-h-screen bg-background">
+      <div className="container max-w-4xl py-4 space-y-6 px-4 sm:px-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link to="/settings" className="sm:hidden">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <h1 className="text-xl sm:text-2xl font-bold">Theme Customizer</h1>
+          </div>
+          <div className="flex gap-2 items-center">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="sm:hidden">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <NavigationMenu />
+              </SheetContent>
+            </Sheet>
+            <Button onClick={exportTheme} variant="outline" className="hidden sm:flex">
+              <Copy className="h-4 w-4 mr-2" />
+              Export Theme
             </Button>
-          </Link>
-          <h1 className="text-2xl font-bold">Theme Customizer</h1>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={exportTheme} variant="outline">
-            <Copy className="h-4 w-4 mr-2" />
-            Export Theme
-          </Button>
-        </div>
+
+        <Card className="p-4 bg-primary/5 border-primary/10">
+          <p className="text-sm text-muted-foreground">
+            Welcome to the Theme Customizer! Here you can either choose from our preset themes
+            or create your own custom theme. All changes are previewed in real-time.
+          </p>
+        </Card>
+
+        <Tabs defaultValue="presets" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="presets">Preset Themes</TabsTrigger>
+            <TabsTrigger value="custom">Custom Theme</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="presets" className="space-y-6">
+            <PresetThemes
+              presets={presetThemes}
+              onApplyTheme={applyTheme}
+            />
+          </TabsContent>
+
+          <TabsContent value="custom" className="space-y-6">
+            <CustomThemeForm
+              colors={customColors}
+              onColorChange={handleColorChange}
+              onApplyTheme={() => applyTheme(customColors)}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
-
-      <Tabs defaultValue="custom">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="custom">Custom Theme</TabsTrigger>
-          <TabsTrigger value="presets">Preset Themes</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="custom" className="space-y-6">
-          <Card>
-            <CardContent className="p-6">
-              <CustomThemeForm
-                colors={customColors}
-                onColorChange={handleColorChange}
-                onApplyTheme={() => applyTheme(customColors)}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="presets" className="space-y-6">
-          <PresetThemes
-            presets={presetThemes}
-            onApplyTheme={applyTheme}
-          />
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }
