@@ -12,6 +12,8 @@ import { PomodoroTimer } from '@/components/PomodoroTimer';
 import { SmartSuggestions } from '@/components/SmartSuggestions';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { WelcomeGuide } from '@/components/WelcomeGuide';
+import { TaskTemplateList } from '@/components/TaskTemplates/TaskTemplateList';
+import { TaskRecommender } from '@/components/AIRecommendations/TaskRecommender';
 import {
   HoverCard,
   HoverCardContent,
@@ -125,9 +127,13 @@ const Index = () => {
           <div className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="col-span-3">
-                <SmartSuggestions />
-                <div className="animate-slide-in [--slide-in-delay:700ms]">
-                  <TaskForm />
+                <div className="grid gap-4">
+                  <TaskRecommender />
+                  <SmartSuggestions />
+                  <div className="animate-slide-in [--slide-in-delay:700ms]">
+                    <TaskForm />
+                  </div>
+                  <TaskTemplateList />
                 </div>
               </div>
               <div className="col-span-1">
