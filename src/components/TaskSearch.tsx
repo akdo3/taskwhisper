@@ -35,7 +35,7 @@ export const TaskSearch = ({
           <SelectValue placeholder={t('filterByPriority')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All priorities</SelectItem>
+          <SelectItem value="all">All priorities</SelectItem>
           <SelectItem value="low">Low Priority</SelectItem>
           <SelectItem value="medium">Medium Priority</SelectItem>
           <SelectItem value="high">High Priority</SelectItem>
