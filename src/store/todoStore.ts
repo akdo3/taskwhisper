@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { toast } from 'sonner';
 import { createTaskSlice, TaskSlice } from './slices/taskSlice';
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
@@ -9,12 +10,25 @@ import { showNotification } from '../utils/notifications';
 
 type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice;
 
-export const useTodoStore = create<TodoStore>((set) => ({
-  ...createTaskSlice(set),
-  ...createProjectSlice(set),
-  ...createTagSlice(set),
-  ...createCategorySlice(set),
-}));
+export const useTodoStore = create<TodoStore>()(
+  persist(
+    (set) => ({
+      ...createTaskSlice(set),
+      ...createProjectSlice(set),
+      ...createTagSlice(set),
+      ...createCategorySlice(set),
+    }),
+    {
+      name: 'todo-storage',
+      partialize: (state) => ({
+        tasks: state.tasks,
+        projects: state.projects,
+        tags: state.tags,
+        categories: state.categories,
+      }),
+    }
+  )
+);
 
 // Check for due tasks every minute
 if (typeof window !== 'undefined') {

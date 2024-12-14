@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TaskForm } from '@/components/TaskForm';
 import { Settings, BarChart2, FolderKanban, Calendar, List, HelpCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useBeforeUnload } from 'react-router-dom';
 import { ListView } from '@/components/views/ListView';
 import { CalendarView } from '@/components/views/CalendarView';
 import { KanbanView } from '@/components/views/KanbanView';
@@ -32,6 +32,28 @@ const Index = () => {
   const { t } = useTranslation();
   const [currentView, setCurrentView] = useState<ViewType>('list');
   const [showGuide, setShowGuide] = useState(true);
+  const navigate = useNavigate();
+
+  // Prevent accidental navigation away
+  useBeforeUnload((event) => {
+    const message = 'Are you sure you want to leave? Your changes will be saved.';
+    event.returnValue = message;
+    return message;
+  });
+
+  // Load saved view preference
+  useEffect(() => {
+    const savedView = localStorage.getItem('preferred-view');
+    if (savedView) {
+      setCurrentView(savedView as ViewType);
+    }
+  }, []);
+
+  // Save view preference
+  const handleViewChange = (view: string) => {
+    setCurrentView(view as ViewType);
+    localStorage.setItem('preferred-view', view);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -165,7 +187,7 @@ const Index = () => {
 
             <Tabs 
               value={currentView} 
-              onValueChange={(value) => setCurrentView(value as ViewType)} 
+              onValueChange={handleViewChange}
               className="w-full"
             >
               <TabsList className="grid w-full grid-cols-3">
