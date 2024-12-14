@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 interface ThemePreviewProps {
   colors: {
@@ -16,7 +17,7 @@ export const ThemePreview = ({ colors }: ThemePreviewProps) => {
       backgroundColor: `hsl(${colors.background})`,
       color: `hsl(${colors.foreground})`
     }}>
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <Button style={{
           backgroundColor: `hsl(${colors.primary})`,
           color: `hsl(${colors.foreground})`
@@ -31,9 +32,10 @@ export const ThemePreview = ({ colors }: ThemePreviewProps) => {
         </Button>
       </div>
       <Card>
-        <CardContent className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Sample Card</h3>
-          <p>This is how your content will look with this theme.</p>
+        <CardContent className="p-4 space-y-4">
+          <h3 className="text-lg font-semibold">Sample Card</h3>
+          <p className="text-sm">This is how your content will look.</p>
+          <Input placeholder="Sample input field" />
         </CardContent>
       </Card>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy, Menu } from 'lucide-react';
+import { ArrowLeft, Copy, Menu, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +14,7 @@ import { NavigationMenu } from '@/components/NavigationMenu';
 const presetThemes = [
   {
     name: 'Purple Dream',
+    description: 'A modern dark theme with purple accents',
     colors: {
       background: '222.2 84% 4.9%',
       foreground: '210 40% 98%',
@@ -23,6 +24,7 @@ const presetThemes = [
   },
   {
     name: 'Ocean Breeze',
+    description: 'Fresh and calming blue tones',
     colors: {
       background: '200 98% 39%',
       foreground: '0 0% 100%',
@@ -32,11 +34,22 @@ const presetThemes = [
   },
   {
     name: 'Sunset Glow',
+    description: 'Warm and inviting light theme',
     colors: {
       background: '0 0% 100%',
       foreground: '20 14.3% 4.1%',
       primary: '24.6 95% 53.1%',
       secondary: '60 4.8% 95.9%'
+    }
+  },
+  {
+    name: 'Forest Night',
+    description: 'Deep greens with dark accents',
+    colors: {
+      background: '120 15% 8%',
+      foreground: '120 10% 95%',
+      primary: '142 70% 45%',
+      secondary: '120 25% 15%'
     }
   }
 ];
@@ -62,7 +75,9 @@ export default function ThemeCustomizer() {
       document.documentElement.style.setProperty(`--${key}`, value);
     });
     setTheme('custom');
-    toast.success('Theme applied successfully');
+    toast.success('Theme applied successfully', {
+      description: 'Your custom theme has been applied to the application.'
+    });
   };
 
   const exportTheme = () => {
@@ -79,7 +94,9 @@ export default function ThemeCustomizer() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    toast.success('Theme exported successfully');
+    toast.success('Theme exported successfully', {
+      description: 'Your theme has been downloaded as a JSON file.'
+    });
   };
 
   return (
@@ -113,10 +130,15 @@ export default function ThemeCustomizer() {
         </div>
 
         <Card className="p-4 bg-primary/5 border-primary/10">
-          <p className="text-sm text-muted-foreground">
-            Welcome to the Theme Customizer! Here you can either choose from our preset themes
-            or create your own custom theme. All changes are previewed in real-time.
-          </p>
+          <div className="flex items-start gap-4">
+            <Eye className="h-5 w-5 mt-1 text-primary" />
+            <div>
+              <h3 className="font-medium mb-1">Live Preview</h3>
+              <p className="text-sm text-muted-foreground">
+                All changes are previewed in real-time. Try different colors and see how they look instantly!
+              </p>
+            </div>
+          </div>
         </Card>
 
         <Tabs defaultValue="presets" className="space-y-6">
