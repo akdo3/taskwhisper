@@ -5,6 +5,11 @@ import { Plus, Folder } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { toast } from 'sonner';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export const Sidebar = () => {
   const { projects, selectedProjectId, selectProject, addProject } = useTodoStore();
@@ -26,7 +31,7 @@ export const Sidebar = () => {
     toast.success("Project created successfully!");
   };
 
-  return (
+  const SidebarContent = () => (
     <div className="h-full bg-background p-4 overflow-y-auto scrollbar-hidden">
       <div className="flex items-center justify-between mb-6 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-2 z-10">
         <h2 className="text-lg font-semibold">Projects</h2>
@@ -73,10 +78,10 @@ export const Sidebar = () => {
             key={project.id}
             onClick={() => selectProject(project.id)}
             className={cn(
-              "w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg transition-colors touch-target min-h-[48px] hover:bg-accent/50",
+              "w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg transition-colors touch-target min-h-[48px]",
               selectedProjectId === project.id
                 ? "bg-primary text-primary-foreground"
-                : "hover:bg-muted"
+                : "hover:bg-accent/50"
             )}
           >
             <Folder className="h-5 w-5 shrink-0" style={{ color: project.color }} />
@@ -85,5 +90,29 @@ export const Sidebar = () => {
         ))}
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block h-full">
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Sidebar */}
+      <div className="md:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="touch-target">
+              <Folder className="h-5 w-5" />
+              <span className="sr-only">Open projects</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[280px] sm:w-[350px]">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 };
