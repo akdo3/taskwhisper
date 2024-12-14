@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TaskForm } from '@/components/TaskForm';
-import { Settings, BarChart2, FolderKanban, Calendar, List, HelpCircle } from 'lucide-react';
+import { Settings, BarChart2, FolderKanban, Calendar, List, HelpCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,12 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type ViewType = 'list' | 'kanban' | 'calendar';
 
@@ -36,84 +42,83 @@ const Index = () => {
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold">{t('welcome')}</h1>
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="touch-target"
-                  aria-label={t('quickHelp')}
-                >
-                  <HelpCircle className="h-4 w-4" />
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">{t('quickHelp')}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t('helpText')}
-                  </p>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="touch-target"
+                    aria-label={t('quickHelp')}
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Need help? Click for a quick guide</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           
           <div className="flex items-center gap-2">
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Link to="/projects">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="touch-target"
-                    aria-label={t('projects')}
-                  >
-                    <FolderKanban className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </HoverCardTrigger>
-              <HoverCardContent side="bottom" className="w-40">
-                <p className="text-sm">{t('projects')}</p>
-              </HoverCardContent>
-            </HoverCard>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to="/projects">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="touch-target"
+                      aria-label={t('projects')}
+                    >
+                      <FolderKanban className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Manage your projects</p>
+                </TooltipContent>
+              </Tooltip>
 
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Link to="/analytics">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="touch-target"
-                    aria-label={t('analytics')}
-                  >
-                    <BarChart2 className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </HoverCardTrigger>
-              <HoverCardContent side="bottom" className="w-40">
-                <p className="text-sm">{t('analytics')}</p>
-              </HoverCardContent>
-            </HoverCard>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to="/analytics">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="touch-target"
+                      aria-label={t('analytics')}
+                    >
+                      <BarChart2 className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View your analytics</p>
+                </TooltipContent>
+              </Tooltip>
 
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Link to="/settings">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="touch-target"
-                    aria-label={t('settings')}
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </HoverCardTrigger>
-              <HoverCardContent side="bottom" className="w-40">
-                <p className="text-sm">{t('settings')}</p>
-              </HoverCardContent>
-            </HoverCard>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to="/settings">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="touch-target"
+                      aria-label={t('settings')}
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Customize your settings</p>
+                </TooltipContent>
+              </Tooltip>
 
-            <ThemeToggle />
+              <ThemeToggle />
+            </TooltipProvider>
           </div>
         </div>
       </header>
@@ -128,12 +133,29 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="col-span-3">
                 <div className="grid gap-4">
-                  <TaskRecommender />
-                  <SmartSuggestions />
-                  <div className="animate-slide-in [--slide-in-delay:700ms]">
-                    <TaskForm />
+                  <div className="bg-card rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg font-semibold">Task Management</h2>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Create and manage your tasks here</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <TaskRecommender />
+                    <SmartSuggestions />
+                    <div className="animate-slide-in [--slide-in-delay:700ms]">
+                      <TaskForm />
+                    </div>
+                    <TaskTemplateList />
                   </div>
-                  <TaskTemplateList />
                 </div>
               </div>
               <div className="col-span-1">
