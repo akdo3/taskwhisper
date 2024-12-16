@@ -7,52 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/components/ThemeProvider';
 import { toast } from 'sonner';
 import { CustomThemeForm } from '@/components/theme/CustomThemeForm';
-import { PresetThemes } from '@/components/theme/PresetThemes';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { NavigationMenu } from '@/components/NavigationMenu';
-
-const presetThemes = [
-  {
-    name: 'Purple Dream',
-    description: 'A modern dark theme with purple accents',
-    colors: {
-      background: '222.2 84% 4.9%',
-      foreground: '210 40% 98%',
-      primary: '262.1 83.3% 57.8%',
-      secondary: '217.2 32.6% 17.5%'
-    }
-  },
-  {
-    name: 'Ocean Breeze',
-    description: 'Fresh and calming blue tones',
-    colors: {
-      background: '200 98% 39%',
-      foreground: '0 0% 100%',
-      primary: '199 89% 48%',
-      secondary: '200 98% 39%'
-    }
-  },
-  {
-    name: 'Sunset Glow',
-    description: 'Warm and inviting light theme',
-    colors: {
-      background: '0 0% 100%',
-      foreground: '20 14.3% 4.1%',
-      primary: '24.6 95% 53.1%',
-      secondary: '60 4.8% 95.9%'
-    }
-  },
-  {
-    name: 'Forest Night',
-    description: 'Deep greens with dark accents',
-    colors: {
-      background: '120 15% 8%',
-      foreground: '120 10% 95%',
-      primary: '142 70% 45%',
-      secondary: '120 25% 15%'
-    }
-  }
-];
+import { ThemeGallery } from '@/components/theme/ThemeGallery';
 
 export default function ThemeCustomizer() {
   const { setTheme } = useTheme();
@@ -70,14 +27,12 @@ export default function ThemeCustomizer() {
     }));
   };
 
-  const applyTheme = (colors: typeof customColors) => {
-    Object.entries(colors).forEach(([key, value]) => {
+  const applyCustomTheme = () => {
+    Object.entries(customColors).forEach(([key, value]) => {
       document.documentElement.style.setProperty(`--${key}`, value);
     });
     setTheme('custom');
-    toast.success('Theme applied successfully', {
-      description: 'Your custom theme has been applied to the application.'
-    });
+    toast.success('Custom theme applied successfully');
   };
 
   const exportTheme = () => {
@@ -94,14 +49,12 @@ export default function ThemeCustomizer() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    toast.success('Theme exported successfully', {
-      description: 'Your theme has been downloaded as a JSON file.'
-    });
+    toast.success('Theme exported successfully');
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-4xl py-4 space-y-6 px-4 sm:px-6">
+      <div className="container max-w-6xl py-4 space-y-6 px-4 sm:px-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link to="/settings" className="sm:hidden">
@@ -133,32 +86,29 @@ export default function ThemeCustomizer() {
           <div className="flex items-start gap-4">
             <Eye className="h-5 w-5 mt-1 text-primary" />
             <div>
-              <h3 className="font-medium mb-1">Live Preview</h3>
+              <h3 className="font-medium mb-1">Theme Preview</h3>
               <p className="text-sm text-muted-foreground">
-                All changes are previewed in real-time. Try different colors and see how they look instantly!
+                Browse through our collection of themes or create your own custom theme
               </p>
             </div>
           </div>
         </Card>
 
-        <Tabs defaultValue="presets" className="space-y-6">
+        <Tabs defaultValue="gallery" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="presets">Preset Themes</TabsTrigger>
+            <TabsTrigger value="gallery">Theme Gallery</TabsTrigger>
             <TabsTrigger value="custom">Custom Theme</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="presets" className="space-y-6">
-            <PresetThemes
-              presets={presetThemes}
-              onApplyTheme={applyTheme}
-            />
+          <TabsContent value="gallery" className="space-y-6">
+            <ThemeGallery />
           </TabsContent>
 
           <TabsContent value="custom" className="space-y-6">
             <CustomThemeForm
               colors={customColors}
               onColorChange={handleColorChange}
-              onApplyTheme={() => applyTheme(customColors)}
+              onApplyTheme={applyCustomTheme}
             />
           </TabsContent>
         </Tabs>
