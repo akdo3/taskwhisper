@@ -17,7 +17,10 @@ export default function ThemeCustomizer() {
     background: '0 0% 100%',
     foreground: '222.2 84% 4.9%',
     primary: '262.1 83.3% 57.8%',
-    secondary: '210 40% 96.1%'
+    secondary: '210 40% 96.1%',
+    border: '214.3 31.8% 91.4%',
+    muted: '210 40% 96.1%',
+    card: '0 0% 100%'
   });
 
   const handleColorChange = (key: string, value: string) => {

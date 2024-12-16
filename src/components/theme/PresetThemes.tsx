@@ -17,6 +17,9 @@ interface PresetTheme {
     foreground: string;
     primary: string;
     secondary: string;
+    border: string;
+    muted: string;
+    card: string;
   };
 }
 
