@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, PersistOptions } from 'zustand/middleware';
+import { persist, createJSONStorage, PersistOptions } from 'zustand/middleware';
 import { StateCreator } from 'zustand';
 import { toast } from 'sonner';
 import { createTaskSlice, TaskSlice } from './slices/taskSlice';
@@ -13,21 +13,22 @@ import { showNotification } from '../utils/notifications';
 type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice & TemplateSlice;
 
 type TodoStorePersist = (
-  config: StateCreator<TodoStore>,
+  config: StateCreator<TodoStore, [], [], TodoStore>,
   options: PersistOptions<TodoStore>
-) => StateCreator<TodoStore>;
+) => StateCreator<TodoStore, [], [], TodoStore>;
 
 export const useTodoStore = create<TodoStore>()(
   (persist as TodoStorePersist)(
-    (set) => ({
-      ...createTaskSlice(set),
-      ...createProjectSlice(set),
-      ...createTagSlice(set),
-      ...createCategorySlice(set),
-      ...createTemplateSlice(set),
+    (...a) => ({
+      ...createTaskSlice((...a) => a[0]),
+      ...createProjectSlice((...a) => a[0]),
+      ...createTagSlice((...a) => a[0]),
+      ...createCategorySlice((...a) => a[0]),
+      ...createTemplateSlice((...a) => a[0]),
     }),
     {
       name: 'todo-storage',
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         tasks: state.tasks,
         projects: state.projects,
