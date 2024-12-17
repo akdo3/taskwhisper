@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 interface WelcomeGuideProps {
@@ -11,7 +11,16 @@ interface WelcomeGuideProps {
 
 export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [shouldShow, setShouldShow] = useState(true);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const hasSeenGuide = localStorage.getItem('hasSeenGuide');
+    if (hasSeenGuide) {
+      setShouldShow(false);
+      onDismiss();
+    }
+  }, [onDismiss]);
 
   const steps = [
     {
@@ -50,6 +59,7 @@ export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      localStorage.setItem('hasSeenGuide', 'true');
       onDismiss();
     }
   };
@@ -60,52 +70,64 @@ export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
     }
   };
 
+  if (!shouldShow) return null;
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="mb-6"
-    >
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center gap-3">
-              <span className="text-4xl">{steps[currentStep].icon}</span>
-              <div>
-                <h2 className="text-lg font-semibold">{steps[currentStep].title}</h2>
-                <p className="text-muted-foreground mt-1">{steps[currentStep].content}</p>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="mb-6"
+      >
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-4xl">{steps[currentStep].icon}</span>
+                <div>
+                  <h2 className="text-lg font-semibold">{steps[currentStep].title}</h2>
+                  <p className="text-muted-foreground mt-1">{steps[currentStep].content}</p>
+                </div>
               </div>
-            </div>
-            <Button variant="ghost" size="icon" onClick={onDismiss} className="shrink-0">
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="flex justify-between items-center mt-6">
-            <div className="flex gap-1">
-              {steps.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-1 w-6 rounded-full transition-colors ${
-                    index === currentStep ? 'bg-primary' : 'bg-muted'
-                  }`}
-                />
-              ))}
-            </div>
-            <div className="flex gap-2">
-              {currentStep > 0 && (
-                <Button variant="outline" onClick={handlePrevious}>
-                  Previous
-                </Button>
-              )}
-              <Button onClick={handleNext}>
-                {currentStep < steps.length - 1 ? "Next" : "Get Started"}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => {
+                  localStorage.setItem('hasSeenGuide', 'true');
+                  onDismiss();
+                }} 
+                className="shrink-0"
+              >
+                <X className="h-4 w-4" />
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+            
+            <div className="flex justify-between items-center mt-6">
+              <div className="flex gap-1">
+                {steps.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-1 w-6 rounded-full transition-colors ${
+                      index === currentStep ? 'bg-primary' : 'bg-muted'
+                    }`}
+                  />
+                ))}
+              </div>
+              <div className="flex gap-2">
+                {currentStep > 0 && (
+                  <Button variant="outline" onClick={handlePrevious}>
+                    Previous
+                  </Button>
+                )}
+                <Button onClick={handleNext}>
+                  {currentStep < steps.length - 1 ? "Next" : "Get Started"}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </AnimatePresence>
   );
 };
