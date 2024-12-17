@@ -2,7 +2,6 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { ThemePreview } from './ThemePreview';
-import { useState } from 'react';
 
 interface HSLSlidersProps {
   onColorChange: (key: string, value: string) => void;
@@ -19,8 +18,12 @@ interface HSLSlidersProps {
 
 export const HSLSliders = ({ onColorChange, colors }: HSLSlidersProps) => {
   const parseHSL = (hslString: string) => {
-    const [h, s, l] = hslString.split(' ').map(val => parseInt(val));
-    return { h: h || 0, s: parseInt(s) || 0, l: parseInt(l) || 0 };
+    const values = hslString.split(' ').map(val => parseFloat(val));
+    return { 
+      h: values[0] || 0, 
+      s: parseInt(values[1]?.toString() || '0'), 
+      l: parseInt(values[2]?.toString() || '0') 
+    };
   };
 
   const updateHSL = (key: string, type: 'h' | 's' | 'l', value: number) => {
