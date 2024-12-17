@@ -176,7 +176,6 @@ const Index = () => {
                     <div className="animate-slide-in [--slide-in-delay:700ms]">
                       <TaskForm />
                     </div>
-                    <TaskTemplateList />
                   </div>
                 </div>
               </div>

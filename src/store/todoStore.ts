@@ -1,30 +1,22 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, PersistOptions } from 'zustand/middleware';
-import { StateCreator } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { toast } from 'sonner';
 import { createTaskSlice, TaskSlice } from './slices/taskSlice';
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createTagSlice, TagSlice } from './slices/tagSlice';
 import { createCategorySlice, CategorySlice } from './slices/categorySlice';
-import { createTemplateSlice, TemplateSlice } from './slices/templateSlice';
 import { saveTask, deleteTask as deleteTaskFromDB } from '../utils/storage';
 import { showNotification } from '../utils/notifications';
 
-type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice & TemplateSlice;
-
-type TodoStorePersist = (
-  config: StateCreator<TodoStore, [], [], TodoStore>,
-  options: PersistOptions<TodoStore>
-) => StateCreator<TodoStore, [], [], TodoStore>;
+type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice;
 
 export const useTodoStore = create<TodoStore>()(
-  (persist as TodoStorePersist)(
-    (...a) => ({
-      ...createTaskSlice((...a) => a[0]),
-      ...createProjectSlice((...a) => a[0]),
-      ...createTagSlice((...a) => a[0]),
-      ...createCategorySlice((...a) => a[0]),
-      ...createTemplateSlice((...a) => a[0]),
+  persist(
+    (set) => ({
+      ...createTaskSlice(set),
+      ...createProjectSlice(set),
+      ...createTagSlice(set),
+      ...createCategorySlice(set),
     }),
     {
       name: 'todo-storage',
@@ -34,7 +26,6 @@ export const useTodoStore = create<TodoStore>()(
         projects: state.projects,
         tags: state.tags,
         categories: state.categories,
-        templates: state.templates,
       }),
     }
   )

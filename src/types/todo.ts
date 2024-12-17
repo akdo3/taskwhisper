@@ -52,12 +52,6 @@ export interface Project {
 
 export type NewTask = Omit<Task, 'id'>;
 
-export interface TaskTemplate {
-  id: string;
-  name: string;
-  template: Omit<Task, 'id'>;
-}
-
 export interface AIRecommendation {
   id: string;
   text: string;
