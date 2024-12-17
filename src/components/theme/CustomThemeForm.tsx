@@ -6,7 +6,9 @@ import { ThemePreview } from './ThemePreview';
 import { Card } from '@/components/ui/card';
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { createThemeFromColor, convertHexToHSL } from '@/utils/themePresets';
+import { createThemeFromColor } from '@/utils/themePresets';
+import { HSLSliders } from './HSLSliders';
+import { ImageThemeGenerator } from './ImageThemeGenerator';
 import {
   Tooltip,
   TooltipContent,
@@ -40,50 +42,13 @@ export const CustomThemeForm = ({ colors, onColorChange, onApplyTheme }: CustomT
     });
   };
 
-  const colorFields = [
-    {
-      key: 'background',
-      label: 'Background Color',
-      description: 'The main background color of your application'
-    },
-    {
-      key: 'foreground',
-      label: 'Foreground Color',
-      description: 'The main text color that contrasts with the background'
-    },
-    {
-      key: 'primary',
-      label: 'Primary Color',
-      description: 'Used for primary buttons and important UI elements'
-    },
-    {
-      key: 'secondary',
-      label: 'Secondary Color',
-      description: 'Used for secondary buttons and less prominent elements'
-    },
-    {
-      key: 'border',
-      label: 'Border Color',
-      description: 'Used for borders and dividers'
-    },
-    {
-      key: 'muted',
-      label: 'Muted Color',
-      description: 'Used for muted text and backgrounds'
-    },
-    {
-      key: 'card',
-      label: 'Card Color',
-      description: 'Used for card backgrounds'
-    }
-  ];
-
   return (
     <div className="space-y-6">
       <Tabs defaultValue="quick" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="quick">Quick Customize</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="quick">Quick</TabsTrigger>
           <TabsTrigger value="advanced">Advanced</TabsTrigger>
+          <TabsTrigger value="image">From Image</TabsTrigger>
         </TabsList>
 
         <TabsContent value="quick" className="space-y-4">
@@ -115,34 +80,15 @@ export const CustomThemeForm = ({ colors, onColorChange, onApplyTheme }: CustomT
         </TabsContent>
 
         <TabsContent value="advanced" className="space-y-4">
-          <Card className="p-4">
-            <div className="space-y-4">
-              {colorFields.map((field) => (
-                <TooltipProvider key={field.key}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <Label className="text-sm">{field.label} (HSL)</Label>
-                        <Input
-                          type="text"
-                          value={colors[field.key as keyof typeof colors]}
-                          onChange={(e) => onColorChange(field.key, e.target.value)}
-                          placeholder="Example: 0 0% 100%"
-                          className="mt-1.5"
-                        />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-xs">
-                      <p>{field.description}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Format: Hue Saturation% Lightness%
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ))}
-            </div>
-          </Card>
+          <HSLSliders colors={colors} onColorChange={onColorChange} />
+        </TabsContent>
+
+        <TabsContent value="image" className="space-y-4">
+          <ImageThemeGenerator onApplyTheme={(newColors) => {
+            Object.entries(newColors).forEach(([key, value]) => {
+              onColorChange(key, value as string);
+            });
+          }} />
         </TabsContent>
       </Tabs>
 
