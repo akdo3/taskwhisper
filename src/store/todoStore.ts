@@ -5,10 +5,11 @@ import { createTaskSlice, TaskSlice } from './slices/taskSlice';
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createTagSlice, TagSlice } from './slices/tagSlice';
 import { createCategorySlice, CategorySlice } from './slices/categorySlice';
+import { createTemplateSlice, TemplateSlice } from './slices/templateSlice';
 import { saveTask, deleteTask as deleteTaskFromDB } from '../utils/storage';
 import { showNotification } from '../utils/notifications';
 
-type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice;
+type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice & TemplateSlice;
 
 export const useTodoStore = create<TodoStore>()(
   persist(
@@ -17,6 +18,7 @@ export const useTodoStore = create<TodoStore>()(
       ...createProjectSlice(set),
       ...createTagSlice(set),
       ...createCategorySlice(set),
+      ...createTemplateSlice(set),
     }),
     {
       name: 'todo-storage',
@@ -25,6 +27,7 @@ export const useTodoStore = create<TodoStore>()(
         projects: state.projects,
         tags: state.tags,
         categories: state.categories,
+        templates: state.templates,
       }),
     }
   )
