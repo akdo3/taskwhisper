@@ -5,6 +5,11 @@ export interface TemplateSlice {
   templates: TaskTemplate[];
 }
 
-export const createTemplateSlice: StateCreator<TemplateSlice> = (set) => ({
+export const createTemplateSlice: StateCreator<
+  TemplateSlice,
+  [],
+  [],
+  TemplateSlice
+> = (set) => ({
   templates: [],
 });
