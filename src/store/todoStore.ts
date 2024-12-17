@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
+import { StateCreator } from 'zustand';
 import { toast } from 'sonner';
 import { createTaskSlice, TaskSlice } from './slices/taskSlice';
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
@@ -12,7 +13,7 @@ import { showNotification } from '../utils/notifications';
 type TodoStore = TaskSlice & ProjectSlice & TagSlice & CategorySlice & TemplateSlice;
 
 type TodoStorePersist = (
-  config: StateCreator<TodoStore, [], [], TodoStore>,
+  config: StateCreator<TodoStore>,
   options: PersistOptions<TodoStore>
 ) => StateCreator<TodoStore>;
 
