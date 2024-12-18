@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface WelcomeGuideProps {
   onDismiss: () => void;
@@ -25,33 +26,39 @@ export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
   const steps = [
     {
       title: "Welcome to TaskWhisper!",
-      content: "Your personal task management assistant. Let's get you started with the basics.",
-      icon: "👋"
+      content: "Your personal task management assistant. Let's explore the key features together.",
+      icon: "👋",
+      tooltips: ["Click Next to start the tour", "You can dismiss this guide anytime"]
     },
     {
       title: "Create and Organize Tasks",
-      content: "Click the 'Add Task' button to create new tasks. Add details, due dates, and set priorities to stay organized.",
-      icon: "✏️"
+      content: "Add tasks quickly with the + button. Set priorities, due dates, and add details to stay organized.",
+      icon: "✏️",
+      tooltips: ["Try creating a task now!", "Use priorities to highlight important tasks"]
     },
     {
-      title: "Multiple Views",
-      content: "Switch between List, Kanban, and Calendar views to organize your tasks in the way that works best for you.",
-      icon: "👀"
+      title: "Smart Views",
+      content: "Switch between List, Kanban, and Calendar views. Each view offers unique ways to organize your work.",
+      icon: "👀",
+      tooltips: ["Perfect for different work styles", "Try each view to find your preference"]
     },
     {
-      title: "Projects and Categories",
-      content: "Group related tasks into projects and categories for better organization and tracking.",
-      icon: "📁"
+      title: "Projects & Categories",
+      content: "Group related tasks into projects and categories. Track progress and maintain focus on what matters.",
+      icon: "📁",
+      tooltips: ["Create projects for major initiatives", "Use categories for better organization"]
     },
     {
       title: "Stay Productive",
-      content: "Use the Pomodoro Timer to maintain focus and take regular breaks. Track your progress with analytics.",
-      icon: "⏱️"
+      content: "Use the Pomodoro Timer for focused work sessions. Track your progress with detailed analytics.",
+      icon: "⏱️",
+      tooltips: ["25-minute focus sessions", "5-minute breaks to stay fresh"]
     },
     {
-      title: "Customize Your Experience",
-      content: "Change themes, language, and notification preferences in the settings to make TaskWhisper work for you.",
-      icon: "🎨"
+      title: "Personalization",
+      content: "Make TaskWhisper yours with custom themes, keyboard shortcuts, and notification preferences.",
+      icon: "🎨",
+      tooltips: ["Choose from various themes", "Set up notifications"]
     }
   ];
 
@@ -88,6 +95,22 @@ export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
                 <div>
                   <h2 className="text-lg font-semibold">{steps[currentStep].title}</h2>
                   <p className="text-muted-foreground mt-1">{steps[currentStep].content}</p>
+                  <div className="flex gap-2 mt-2">
+                    {steps[currentStep].tooltips.map((tooltip, index) => (
+                      <TooltipProvider key={index}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-6 w-6">
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
                 </div>
               </div>
               <Button 
@@ -96,8 +119,7 @@ export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
                 onClick={() => {
                   localStorage.setItem('hasSeenGuide', 'true');
                   onDismiss();
-                }} 
-                className="shrink-0"
+                }}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -117,11 +139,19 @@ export const WelcomeGuide = ({ onDismiss }: WelcomeGuideProps) => {
               <div className="flex gap-2">
                 {currentStep > 0 && (
                   <Button variant="outline" onClick={handlePrevious}>
+                    <ChevronLeft className="h-4 w-4 mr-2" />
                     Previous
                   </Button>
                 )}
                 <Button onClick={handleNext}>
-                  {currentStep < steps.length - 1 ? "Next" : "Get Started"}
+                  {currentStep < steps.length - 1 ? (
+                    <>
+                      Next
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    </>
+                  ) : (
+                    "Get Started"
+                  )}
                 </Button>
               </div>
             </div>
