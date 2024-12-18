@@ -2,16 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { useEffect } from "react";
 import { initNotifications } from "./utils/notifications";
-import Index from "./pages/Index";
-import Settings from "./pages/Settings";
-import ProjectManagement from "./pages/ProjectManagement";
-import Analytics from "./pages/Analytics";
 import { AppRoutes } from "./components/AppRoutes";
 import { AppProviders } from "./components/AppProviders";
+import { PersistentHeader } from "./components/layout/PersistentHeader";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,6 +26,7 @@ const App = () => {
   return (
     <AppProviders queryClient={queryClient}>
       <div className="min-h-screen bg-background text-foreground">
+        <PersistentHeader />
         <Toaster />
         <Sonner />
         <AppRoutes />

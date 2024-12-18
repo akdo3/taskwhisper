@@ -8,8 +8,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { ArrowLeft, Upload, Palette as PaletteIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "@/components/ThemeProvider";
+import { initNotifications, showNotification } from "@/utils/notifications";
 
 const languages = [
   { code: 'en', name: 'English' },
@@ -32,19 +33,42 @@ const languages = [
 export default function Settings() {
   const [language, setLanguage] = useState('en');
   const [notifications, setNotifications] = useState({
-    email: false,
-    push: true,
-    reminders: true,
-    updates: false,
+    push: false,
+    reminders: false,
   });
   const { setTheme } = useTheme();
 
-  const handleNotificationChange = (key: keyof typeof notifications) => {
-    setNotifications(prev => {
-      const newSettings = { ...prev, [key]: !prev[key] };
-      toast.success(`${key} notifications ${newSettings[key] ? 'enabled' : 'disabled'}`);
-      return newSettings;
-    });
+  useEffect(() => {
+    const initializeNotificationSettings = async () => {
+      const permission = await initNotifications();
+      setNotifications(prev => ({
+        ...prev,
+        push: permission === 'granted'
+      }));
+    };
+
+    initializeNotificationSettings();
+  }, []);
+
+  const handleNotificationChange = async (key: keyof typeof notifications) => {
+    if (key === 'push') {
+      const permission = await initNotifications();
+      if (permission === 'granted') {
+        setNotifications(prev => ({ ...prev, [key]: true }));
+        toast.success('Push notifications enabled');
+        showNotification('Notifications Enabled', {
+          body: 'You will now receive push notifications',
+        });
+      } else {
+        toast.error('Permission denied for push notifications');
+      }
+    } else {
+      setNotifications(prev => {
+        const newSettings = { ...prev, [key]: !prev[key] };
+        toast.success(`${key} notifications ${newSettings[key] ? 'enabled' : 'disabled'}`);
+        return newSettings;
+      });
+    }
   };
 
   const handleThemeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,14 +167,6 @@ export default function Settings() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor="email-notifications">Email Notifications</Label>
-            <Switch
-              id="email-notifications"
-              checked={notifications.email}
-              onCheckedChange={() => handleNotificationChange('email')}
-            />
-          </div>
-          <div className="flex items-center justify-between">
             <Label htmlFor="push-notifications">Push Notifications</Label>
             <Switch
               id="push-notifications"
@@ -164,14 +180,6 @@ export default function Settings() {
               id="reminder-notifications"
               checked={notifications.reminders}
               onCheckedChange={() => handleNotificationChange('reminders')}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="update-notifications">Project Updates</Label>
-            <Switch
-              id="update-notifications"
-              checked={notifications.updates}
-              onCheckedChange={() => handleNotificationChange('updates')}
             />
           </div>
         </CardContent>
