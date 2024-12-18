@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy, Menu, Eye } from 'lucide-react';
+import { ArrowLeft, Copy, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/components/ThemeProvider';
 import { toast } from 'sonner';
 import { CustomThemeForm } from '@/components/theme/CustomThemeForm';
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { NavigationMenu } from '@/components/NavigationMenu';
 import { ThemeGallery } from '@/components/theme/ThemeGallery';
 
@@ -68,16 +67,6 @@ export default function ThemeCustomizer() {
             <h1 className="text-xl sm:text-2xl font-bold">Theme Customizer</h1>
           </div>
           <div className="flex gap-2 items-center">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="sm:hidden">
-                  <Menu className="h-4 w-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <NavigationMenu />
-              </SheetContent>
-            </Sheet>
             <Button onClick={exportTheme} variant="outline" className="hidden sm:flex">
               <Copy className="h-4 w-4 mr-2" />
               Export Theme
