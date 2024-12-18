@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export const ProjectManagement = () => {
+const ProjectManagement = () => {
   const projects = useTodoStore(state => state.projects);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
@@ -52,3 +52,5 @@ export const ProjectManagement = () => {
     </div>
   );
 };
+
+export default ProjectManagement;

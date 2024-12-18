@@ -48,6 +48,7 @@ export interface Project {
   id: string;
   name: string;
   color: string;
+  description?: string;
 }
 
 export type NewTask = Omit<Task, 'id'>;
