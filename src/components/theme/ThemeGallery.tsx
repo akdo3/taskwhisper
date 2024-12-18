@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ThemePreset, themePresets } from '@/utils/themes';
+import { themePresets } from '@/utils/themes';
+import { ThemePreset } from '@/types/theme';
 import { useTheme } from "@/components/ThemeProvider";
 import { motion } from "framer-motion";
 import { Search, Palette } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { applyTheme } from '@/utils/themes';
 
 export function ThemeGallery() {
   const { setTheme } = useTheme();
