@@ -27,5 +27,17 @@ export const lightThemes: ThemePreset[] = [
       card: "30 20% 97%"
     }
   },
-  // ... 30 more light themes
+  {
+    name: "Arctic Frost",
+    description: "Cool blue-white theme",
+    colors: {
+      background: "200 30% 98%",
+      foreground: "200 80% 10%",
+      primary: "200 80% 45%",
+      secondary: "200 40% 92%",
+      border: "200 30% 87%",
+      muted: "200 20% 92%",
+      card: "200 30% 99%"
+    }
+  }
 ];

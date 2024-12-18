@@ -15,17 +15,29 @@ export const darkThemes: ThemePreset[] = [
     }
   },
   {
-    name: "Cyber Night",
-    description: "High contrast dark theme",
+    name: "Neon Nights",
+    description: "Vibrant neon colors",
     colors: {
-      background: "280 80% 5%",
+      background: "260 20% 10%",
       foreground: "0 0% 100%",
-      primary: "320 100% 55%",
-      secondary: "180 100% 50%",
-      border: "300 100% 40%",
-      muted: "280 50% 20%",
-      card: "280 80% 7%"
+      primary: "320 100% 60%",
+      secondary: "280 100% 60%",
+      border: "300 100% 50%",
+      muted: "270 50% 25%",
+      card: "260 20% 12%"
     }
   },
-  // ... 30 more dark themes
+  {
+    name: "Deep Ocean",
+    description: "Dark blue oceanic theme",
+    colors: {
+      background: "220 40% 13%",
+      foreground: "0 0% 100%",
+      primary: "199 95% 74%",
+      secondary: "200 50% 20%",
+      border: "200 50% 15%",
+      muted: "200 40% 25%",
+      card: "220 40% 15%"
+    }
+  }
 ];

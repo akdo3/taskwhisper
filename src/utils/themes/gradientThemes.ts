@@ -29,5 +29,18 @@ export const gradientThemes: ThemePreset[] = [
     },
     gradient: "linear-gradient(to right, #243949 0%, #517fa4 100%)"
   },
-  // ... 40 more gradient themes
+  {
+    name: "Purple Dream",
+    description: "Ethereal purple gradient",
+    colors: {
+      background: "270 20% 98%",
+      foreground: "270 50% 10%",
+      primary: "270 80% 50%",
+      secondary: "270 30% 90%",
+      border: "270 30% 85%",
+      muted: "270 20% 90%",
+      card: "270 20% 99%"
+    },
+    gradient: "linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%)"
+  }
 ];
